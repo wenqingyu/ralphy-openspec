@@ -11,7 +11,7 @@ function buildProgram(): Command {
     .description(
       "One-command setup for Ralph loop + OpenSpec workflows across Cursor, OpenCode, and Claude Code."
     )
-    .version("0.1.1");
+    .version("0.1.2");
 
   registerInitCommand(program);
   registerValidateCommand(program);

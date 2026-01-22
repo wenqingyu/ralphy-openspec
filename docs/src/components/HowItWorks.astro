@@ -1,0 +1,292 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<!-- How It Works Section -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <h2 class="section-title">How It Works</h2>
+    
+    <div class="concepts-grid">
+      <!-- Ralph Loop -->
+      <div class="concept-card">
+        <div class="concept-icon">🔄</div>
+        <h3>Ralph Wiggum Loop</h3>
+        <p>AI receives the <strong>same prompt repeatedly</strong> until task completion. Each iteration, it sees previous work and self-corrects.</p>
+        <pre><code>while true; do
+  ai "Build X. Output DONE when complete."
+  # AI sees files, fixes mistakes
+done</code></pre>
+      </div>
+      
+      <!-- OpenSpec -->
+      <div class="concept-card">
+        <div class="concept-icon">📋</div>
+        <h3>OpenSpec</h3>
+        <p><strong>Specs before code.</strong> Structured specs with acceptance criteria ensure AI knows exactly what to build.</p>
+        <pre><code>openspec/
+├── specs/      # Source of truth
+├── changes/    # Proposals + tasks
+└── archive/    # Completed</code></pre>
+      </div>
+    </div>
+
+    <!-- Workflow Diagram -->
+    <div class="workflow-section">
+      <h3>The Workflow</h3>
+      <div class="workflow-steps">
+        <div class="workflow-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <strong>Plan</strong>
+            <span>PRD → OpenSpec</span>
+          </div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <strong>Implement</strong>
+            <span>Ralph Loop</span>
+          </div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <strong>Validate</strong>
+            <span>Tests Pass</span>
+          </div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <strong>Archive</strong>
+            <span>Merge Specs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why Section -->
+    <div class="why-section">
+      <h3>Why This Combination?</h3>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="problem">❌ Vague requirements</div>
+          <div class="solution">✅ Specs lock intent</div>
+        </div>
+        <div class="why-item">
+          <div class="problem">❌ AI stops mid-task</div>
+          <div class="solution">✅ Loop retries</div>
+        </div>
+        <div class="why-item">
+          <div class="problem">❌ No verification</div>
+          <div class="solution">✅ Tests validate</div>
+        </div>
+        <div class="why-item">
+          <div class="problem">❌ Manual setup</div>
+          <div class="solution">✅ One command</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Credits Section -->
+<section class="section section-alt" id="credits">
+  <div class="container">
+    <h2 class="section-title">{t('section.credits.title')}</h2>
+    <div class="credits-grid">
+      <a href="https://ghuntley.com/ralph" target="_blank" rel="noopener" class="credit-card">
+        <strong>Ralph Methodology</strong>
+        <span>by Geoffrey Huntley</span>
+      </a>
+      <a href="https://github.com/Th0rgal/opencode-ralph-wiggum" target="_blank" rel="noopener" class="credit-card">
+        <strong>opencode-ralph-wiggum</strong>
+        <span>by @Th0rgal</span>
+      </a>
+      <a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener" class="credit-card">
+        <strong>OpenSpec</strong>
+        <span>by Fission-AI</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-alt {
+    background-color: var(--color-bg-secondary);
+  }
+
+  .concepts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .concept-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .concept-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .concept-card h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  .concept-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .concept-card pre {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .workflow-section {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .workflow-section h3 {
+    margin-bottom: 1.5rem;
+  }
+
+  .workflow-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .workflow-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+  }
+
+  .step-num {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.875rem;
+  }
+
+  .step-content {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .step-content strong {
+    font-size: 0.9rem;
+  }
+
+  .step-content span {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  .workflow-arrow {
+    color: var(--color-text-secondary);
+    font-size: 1.25rem;
+  }
+
+  .why-section h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .why-item {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .problem {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .solution {
+    color: var(--color-success);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .credits-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .credit-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    color: var(--color-text);
+    transition: all 0.2s ease;
+  }
+
+  .credit-card:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text);
+  }
+
+  .credit-card strong {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .credit-card span {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .workflow-arrow {
+      display: none;
+    }
+    
+    .workflow-steps {
+      flex-direction: column;
+    }
+  }
+</style>

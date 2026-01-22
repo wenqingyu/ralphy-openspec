@@ -1,7 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Hero from '../../components/Hero.astro';
-import Features from '../../components/Features.astro';
+import ToolTabs from '../../components/ToolTabs.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
 import { ui } from '../../i18n/ui';
 
 export function getStaticPaths() {
@@ -11,5 +12,6 @@ export function getStaticPaths() {
 
 <Layout>
   <Hero />
-  <Features />
+  <ToolTabs />
+  <HowItWorks />
 </Layout>

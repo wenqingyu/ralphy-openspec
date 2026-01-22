@@ -2,180 +2,124 @@
 
 [English](README.md) | [简体中文](README.zh.md) | [한국어](README.ko.md) | [日本語](README.ja.md)
 
-以下のツール向けに **Ralph ループ + OpenSpec** ワークフローを1つのコマンドでセットアップ：
-- Cursor
-- OpenCode
-- Claude Code
+**スペック駆動AI開発 + 反復実行。** OpenSpecとRalph Loopを組み合わせて、予測可能なAI支援コーディングを実現します。
 
 **ウェブサイト:** [https://ralphy-spec.org](https://ralphy-spec.org)
 
-## Ralphy-Specとは？
-
-Ralphy-Specは2つの強力なAI開発方法論を組み合わせています：
-
-### Ralph Wiggumループ
-
-Ralph方法論（[Geoffrey Huntley](https://ghuntley.com/ralph)が提唱）は、AIエージェントがタスクを完了するまで**同じプロンプトを繰り返し**受け取る開発アプローチです。各イテレーションで、AIはファイルとgit履歴で以前の作業を確認し、自己修正フィードバックループを形成します。
-
-```
-while true; do
-  ai_agent "機能Xを構築してください。完了したら<promise>DONE</promise>を出力してください。"
-  # AIは以前の作業を見て、ミスを修正し、進捗を続けます
-done
-```
-
-### OpenSpec（スペック駆動開発）
-
-[OpenSpec](https://github.com/Fission-AI/OpenSpec)は、コードの前にスペックを要求することでAIコーディングに構造をもたらします：
-- `openspec/specs/` - 真実の情報源となるスペック
-- `openspec/changes/` - 受け入れ基準を含む変更提案
-- 完了した変更をマージするアーカイブワークフロー
-
-### なぜ組み合わせるのか？
-
-| 問題 | 解決策 |
-|------|--------|
-| チャット履歴の曖昧な要件 | OpenSpecが意図を構造化されたスペックに固定 |
-| AIが途中で停止したりミスをする | Ralphループが完了するまでリトライ |
-| 正確性を検証する方法がない | 受け入れ基準 + テストで出力を検証 |
-| ツール固有のセットアップが面倒 | 1つのコマンドでCursor、OpenCode、Claude Codeをセットアップ |
-
-## プロジェクトにインストールされるもの
-
-- `openspec/` スキャフォールド：
-  - `openspec/specs/`（真実の情報源）
-  - `openspec/changes/`（アクティブな変更）
-  - `openspec/archive/`（完了した変更）
-  - `openspec/project.md`（プロジェクトコンテキスト）
-- ツール統合：
-  - Cursor: `.cursor/prompts/ralphy-*.md`
-  - Claude Code: `.claude/commands/ralphy-*.md`
-  - OpenCode: `AGENTS.md`
-- Ralphループ状態/設定：
-  - `.ralphy/config.json`
-  - `.ralphy/ralph-loop.state.json`
-
-## インストール
-
-### npm（グローバル）
-
-```bash
-npm install -g ralphy-spec
-```
-
-### npx（インストール不要）
+## クイックスタート
 
 ```bash
 npx ralphy-spec init
 ```
 
-### curlインストールスクリプト
+次に、AIツールに対応するコマンドを使用します：
 
+### Cursor
+
+| コマンド | 機能 |
+|----------|------|
+| `/ralphy:plan` | 要件からスペック作成 |
+| `/ralphy:implement` | 反復ループでビルド |
+| `/ralphy:validate` | 受け入れ基準を検証 |
+| `/ralphy:archive` | 完了してアーカイブ |
+
+### Claude Code
+
+| コマンド | 機能 |
+|----------|------|
+| `/ralphy:plan` | 要件からスペック作成 |
+| `/ralphy:implement` | 反復ループでビルド |
+| `/ralphy:validate` | 受け入れ基準を検証 |
+| `/ralphy:archive` | 完了してアーカイブ |
+
+### OpenCode
+
+AGENTS.mdと自然言語を使用：
+- `"Follow AGENTS.md to plan [機能]"`
+- `"Follow AGENTS.md to implement [変更]"`
+- `"Follow AGENTS.md to validate"`
+- `"Follow AGENTS.md to archive [変更]"`
+
+**Ralph Loopランナーと一緒に:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/anthropics/ralphy-openspec/main/scripts/install.sh | sh
+npm install -g @th0rgal/ralph-wiggum
+ralph "Follow AGENTS.md to implement add-api. Output <promise>TASK_COMPLETE</promise> when done." --max-iterations 20
 ```
 
-## 使用方法
-
-### プロジェクトで初期化
+## ワークフロー例
 
 ```bash
-cd your-project
+# 1. 計画: アイデアからスペック作成
+You: /ralphy:plan JWT ユーザー認証を追加
+
+# 2. 実装: AIが反復的にビルド
+You: /ralphy:implement add-user-auth
+
+# 3. 検証: テストパスを確認
+You: /ralphy:validate
+
+# 4. アーカイブ: 変更を完了
+You: /ralphy:archive add-user-auth
+```
+
+## 作成されるファイル
+
+```
+.cursor/prompts/          # または .claude/commands/
+├── ralphy-plan.md
+├── ralphy-implement.md
+├── ralphy-validate.md
+└── ralphy-archive.md
+
+AGENTS.md                 # OpenCode用
+
+openspec/
+├── specs/                # 真実の情報源
+├── changes/              # 進行中の作業
+├── archive/              # 完了
+└── project.md            # コンテキスト
+
+.ralphy/
+├── config.json
+└── ralph-loop.state.json
+```
+
+## 仕組み
+
+**Ralph Wiggum Loop:** AIがタスク完了まで同じプロンプトを繰り返し受け取ります。各イテレーションで、ファイルの以前の作業を見て自己修正します。
+
+**OpenSpec:** コードの前にスペック。構造化されたスペックと受け入れ基準により、AIが何をビルドすべきか正確に分かります。
+
+**組み合わせる理由：**
+
+| 問題 | 解決策 |
+|------|--------|
+| チャットの曖昧な要件 | スペックが意図を固定 |
+| AIが途中で停止 | 完了するまでループがリトライ |
+| 検証方法がない | テストが出力を検証 |
+| ツール固有のセットアップ | 1つのコマンドですべて解決 |
+
+## インストールオプション
+
+```bash
+# npx（推奨）
+npx ralphy-spec init
+
+# グローバルインストール
+npm install -g ralphy-spec
 ralphy-spec init
-```
 
-非対話的なツール選択：
-
-```bash
+# 特定のツールを指定
 ralphy-spec init --tools cursor,claude-code,opencode
-```
-
-既存ファイルの上書き：
-
-```bash
-ralphy-spec init --force
-```
-
-### セットアップの検証
-
-```bash
-ralphy-spec validate
-```
-
-### テンプレートの更新
-
-```bash
-ralphy-spec update --force
-```
-
-## ワークフロー（PRD -> リリース）
-
-```
-PRD/要件 --> OpenSpec（スペック + タスク + 受け入れ基準）
-                    |
-                    v
-              Ralphループ（テストが通るまで反復）
-                    |
-                    v
-              アーカイブ（ソーススペックにマージ）
-```
-
-### 1) 計画：PRD -> OpenSpec変更
-
-AIツールで`/ralphy:plan`（Cursor / Claude Code）を使用するか、OpenCodeに`AGENTS.md`に従うよう依頼します。
-
-リポジトリでの期待される出力：
-
-```
-openspec/changes/<change-name>/
-  proposal.md
-  tasks.md
-  specs/
-    <domain>/
-      spec.md
-```
-
-### 2) 実装：完了するまで反復
-
-`/ralphy:implement`を使用してタスクを実装し、テストを追加します。
-
-Ralphループランナーで実行する場合、エージェントは**すべてのタスクが完了しテストが通った場合のみ**以下を出力します：
-
-```
-<promise>TASK_COMPLETE</promise>
-```
-
-### 3) 検証：テストで受け入れ基準を証明
-
-`/ralphy:validate`を使用してテストを実行し、通過したテストをOpenSpecシナリオにマッピングします。
-
-### 4) アーカイブ：変更をスペックにマージ
-
-`/ralphy:archive`を使用し、利用可能であればOpenSpec CLIを使用します：
-
-```bash
-openspec archive <change-name> --yes
 ```
 
 ## 謝辞
 
-Ralphy-Specは巨人の肩の上に立っています：
+以下のプロジェクトに基づいています：
 
-- **Ralph Wiggum方法論** - [Geoffrey Huntley](https://ghuntley.com/ralph)が考案。AIエージェントが反復を通じて自己修正できるという洞察は、AI支援開発についての私たちの考え方を変えました。
-
-- **[opencode-ralph-wiggum](https://github.com/Th0rgal/opencode-ralph-wiggum)** by [@Th0rgal](https://github.com/Th0rgal) - 私たちの統合アプローチにインスピレーションを与えたOpenCode用のクリーンなRalphループCLI実装。
-
-- **[OpenSpec](https://github.com/Fission-AI/OpenSpec)** by [Fission-AI](https://github.com/Fission-AI) - AIコーディングに構造と予測可能性をもたらすスペック駆動開発フレームワーク。
-
-これらのアプローチを開拓したこれらのプロジェクトとメンテナーに感謝します。
-
-## 開発
-
-```bash
-npm install
-npm run build
-node bin/ralphy-spec.js --help
-```
+- **[Ralph方法論](https://ghuntley.com/ralph)** by Geoffrey Huntley
+- **[opencode-ralph-wiggum](https://github.com/Th0rgal/opencode-ralph-wiggum)** by @Th0rgal  
+- **[OpenSpec](https://github.com/Fission-AI/OpenSpec)** by Fission-AI
 
 ## ライセンス
 

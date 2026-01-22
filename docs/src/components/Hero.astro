@@ -12,126 +12,53 @@ const t = useTranslations(lang);
       <p class="hero-subtitle">{t('hero.subtitle')}</p>
       
       <div class="hero-actions">
-        <a href={`/${lang}/docs/`} class="btn btn-primary">
+        <a href="#setup" class="btn btn-primary">
           {t('hero.cta')}
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
             <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" fill="none"/>
           </svg>
         </a>
-        <a href="#why" class="btn btn-secondary">{t('hero.learnMore')}</a>
-      </div>
-
-      <div class="quickstart">
-        <p class="quickstart-label">{t('quickstart.description')}</p>
-        <div class="quickstart-code">
-          <code>npx ralphy-spec init</code>
-          <button class="copy-btn" data-copy="npx ralphy-spec init" title="Copy to clipboard">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M4 4h8v8H4V4zm-2 2v8h8v-2H4V6H2z"/>
-            </svg>
-          </button>
-        </div>
+        <a href="#how-it-works" class="btn btn-secondary">{t('hero.learnMore')}</a>
       </div>
     </div>
   </div>
 </section>
 
-<script>
-  document.querySelectorAll('.copy-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const text = btn.getAttribute('data-copy');
-      if (text) {
-        await navigator.clipboard.writeText(text);
-        btn.classList.add('copied');
-        setTimeout(() => btn.classList.remove('copied'), 2000);
-      }
-    });
-  });
-</script>
-
 <style>
   .hero {
-    padding: 6rem 0 4rem;
+    padding: 5rem 0 3rem;
     text-align: center;
     background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   }
 
   .hero-title {
-    font-size: 3rem;
+    font-size: 2.75rem;
     font-weight: 700;
     background: linear-gradient(135deg, var(--color-text), var(--color-primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
   }
 
   .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     color: var(--color-text-secondary);
     max-width: 600px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 1.5rem;
   }
 
   .hero-actions {
     display: flex;
     gap: 1rem;
     justify-content: center;
-    margin-bottom: 3rem;
-  }
-
-  .quickstart {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .quickstart-label {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.75rem;
-  }
-
-  .quickstart-code {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-  }
-
-  .quickstart-code code {
-    background: none;
-    padding: 0;
-    color: var(--color-primary);
-    font-size: 1rem;
-  }
-
-  .copy-btn {
-    background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-  }
-
-  .copy-btn:hover {
-    color: var(--color-text);
-    background-color: var(--color-bg-secondary);
-  }
-
-  .copy-btn.copied {
-    color: var(--color-success);
   }
 
   @media (max-width: 768px) {
-    .hero { padding: 4rem 0 2rem; }
+    .hero { padding: 3rem 0 2rem; }
     .hero-title { font-size: 2rem; }
     .hero-subtitle { font-size: 1rem; }
     .hero-actions { flex-direction: column; align-items: center; }
