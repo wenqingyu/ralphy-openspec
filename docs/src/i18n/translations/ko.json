@@ -11,6 +11,9 @@
   "hero.subtitle": "스펙 기반 개발 + AI 반복 실행<br/>OpenSpec + Ralph Loop를 한 번의 명령으로",
   "hero.cta": "시작하기",
   "hero.viewSource": "소스 보기",
+  "hero.ralphAdvantage": "AI가 작업 완료까지 반복을 통해 자기 수정",
+  "hero.openspecAdvantage": "구조화된 스펙이 코드 작성 전에 의도를 고정",
+  "hero.combinedAdvantage": "AI 에이전트로 코드 조각이 아닌 완전한 기능 배포",
   
   "setup.title": "빠른 시작",
   "setup.step1": "설치",

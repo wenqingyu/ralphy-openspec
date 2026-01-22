@@ -11,6 +11,9 @@
   "hero.subtitle": "Spec-driven development with iterative AI execution.<br/>OpenSpec + Ralph Loop in one command.",
   "hero.cta": "Get Started",
   "hero.viewSource": "View Source",
+  "hero.ralphAdvantage": "AI self-corrects through iteration until task completion",
+  "hero.openspecAdvantage": "Structured specs lock intent before code is written",
+  "hero.combinedAdvantage": "Ship complete features with AI agents, not just snippets",
   
   "setup.title": "Quick Start",
   "setup.step1": "Install",

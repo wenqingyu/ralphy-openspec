@@ -11,6 +11,9 @@
   "hero.subtitle": "スペック駆動開発 + AI反復実行<br/>OpenSpec + Ralph Loopを1つのコマンドで",
   "hero.cta": "始める",
   "hero.viewSource": "ソースを見る",
+  "hero.ralphAdvantage": "AIがタスク完了まで反復を通じて自己修正",
+  "hero.openspecAdvantage": "構造化されたスペックがコード作成前に意図を固定",
+  "hero.combinedAdvantage": "AIエージェントで断片ではなく完全な機能をデプロイ",
   
   "setup.title": "クイックスタート",
   "setup.step1": "インストール",

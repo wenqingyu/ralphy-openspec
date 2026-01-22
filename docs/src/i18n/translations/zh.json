@@ -11,6 +11,9 @@
   "hero.subtitle": "规范驱动开发 + AI 迭代执行<br/>OpenSpec + Ralph 循环，一条命令搞定",
   "hero.cta": "快速开始",
   "hero.viewSource": "查看源码",
+  "hero.ralphAdvantage": "AI 通过迭代自我纠正，直到任务完成",
+  "hero.openspecAdvantage": "结构化规范在编码前锁定意图",
+  "hero.combinedAdvantage": "用 AI 代理交付完整功能，而不只是代码片段",
   
   "setup.title": "快速开始",
   "setup.step1": "安装",
