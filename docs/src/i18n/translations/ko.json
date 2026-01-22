@@ -17,6 +17,7 @@
   
   "setup.title": "빠른 시작",
   "setup.step1": "설치",
+  "setup.step1Hint": "(cd 프로젝트-폴더)",
   "setup.step2": "명령어 사용",
   "setup.filesCreated": "생성되는 파일",
   "setup.example": "예시",

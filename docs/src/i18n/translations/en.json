@@ -17,6 +17,7 @@
   
   "setup.title": "Quick Start",
   "setup.step1": "Install",
+  "setup.step1Hint": "(cd your-project)",
   "setup.step2": "Use Commands",
   "setup.filesCreated": "Files Created",
   "setup.example": "Example",

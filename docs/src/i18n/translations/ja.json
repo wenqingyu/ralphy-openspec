@@ -17,6 +17,7 @@
   
   "setup.title": "クイックスタート",
   "setup.step1": "インストール",
+  "setup.step1Hint": "(cd プロジェクト)",
   "setup.step2": "コマンドを使用",
   "setup.filesCreated": "作成されるファイル",
   "setup.example": "例",

@@ -14,6 +14,7 @@ const t = useTranslations(lang);
       <div class="install-header">
         <span class="install-step">01</span>
         <span class="install-label">{t('setup.step1')}</span>
+        <span class="install-hint">{t('setup.step1Hint')}</span>
       </div>
       <div class="install-command">
         <code>npx ralphy-spec init</code>
@@ -234,6 +235,12 @@ ralph "Follow AGENTS.md to implement add-api. \
     color: var(--color-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  .install-hint {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-left: auto;
   }
 
   .install-command {

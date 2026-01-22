@@ -17,6 +17,7 @@
   
   "setup.title": "快速开始",
   "setup.step1": "安装",
+  "setup.step1Hint": "(cd 你的项目)",
   "setup.step2": "使用命令",
   "setup.filesCreated": "创建的文件",
   "setup.example": "示例",
