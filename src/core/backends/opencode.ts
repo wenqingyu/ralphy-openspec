@@ -1,5 +1,6 @@
 import { execa } from "execa";
 import type { BackendEnv, CodingBackend, ImplementInput, ImplementOutput } from "./types";
+import { writeBackendLog } from "./log-writer";
 
 /**
  * OpenCodeBackend shells out to the `opencode` CLI for code implementation.
@@ -18,13 +19,23 @@ export class OpenCodeBackend implements CodingBackend {
     const prompt = this.buildPrompt(task, iteration, repairNotes);
 
     try {
+      const startedAt = new Date().toISOString();
       // OpenCode CLI: `opencode run --prompt "..." --non-interactive`
+      const command = "opencode";
+      const argv = ["run", "--prompt", prompt, "--non-interactive"];
+
+      // Use task budget time limit if available, otherwise fall back to default or constructor option
+      const taskTimeoutMs =
+        task.budget?.hard?.timeMinutes !== undefined
+          ? task.budget.hard.timeMinutes * 60_000
+          : this.opts.timeoutMs ?? 600_000; // 10 min default
+
       const subprocess = execa(
-        "opencode",
-        ["run", "--prompt", prompt, "--non-interactive"],
+        command,
+        argv,
         {
           cwd: env.cwd,
-          timeout: this.opts.timeoutMs ?? 600_000, // 10 min default
+          timeout: taskTimeoutMs,
           reject: false,
           stdio: "pipe",
         }
@@ -35,6 +46,25 @@ export class OpenCodeBackend implements CodingBackend {
       }
 
       const result = await subprocess;
+      const finishedAt = new Date().toISOString();
+      const timedOut = (result as any).timedOut === true;
+
+      if (env.logFile) {
+        await writeBackendLog({
+          logFile: env.logFile,
+          backendId: env.backendId,
+          cwd: env.cwd,
+          command,
+          argv: argv.map((a, i) => (i === 2 ? "<prompt redacted>" : a)),
+          startedAt,
+          finishedAt,
+          exitCode: result.exitCode ?? null,
+          timedOut,
+          timeoutMs: taskTimeoutMs,
+          stdout: result.stdout,
+          stderr: result.stderr,
+        });
+      }
 
       if (result.exitCode === 0) {
         return {
@@ -43,7 +73,20 @@ export class OpenCodeBackend implements CodingBackend {
         };
       }
 
-      // Non-zero exit code
+      // Handle timeout explicitly
+      if (timedOut || (result.exitCode === 143 && !result.stdout && !result.stderr)) {
+        const timeoutMinutes = Math.floor(taskTimeoutMs / 60_000);
+        return {
+          ok: false,
+          message: `OpenCode timed out after ${timeoutMinutes} minute(s). The task budget allows ${task.budget?.hard?.timeMinutes ?? "N/A"} minutes. ${
+            task.budget?.hard?.timeMinutes && taskTimeoutMs >= task.budget.hard.timeMinutes * 60_000
+              ? "Consider breaking the task into smaller subtasks or increasing the task's hard.time_minutes budget."
+              : "The task may be too complex or OpenCode may need more time. Check the backend log for details."
+          }`,
+        };
+      }
+
+      // Non-zero exit code (not a timeout)
       return {
         ok: false,
         message: `OpenCode exited with code ${result.exitCode}: ${result.stderr || result.stdout}`.slice(

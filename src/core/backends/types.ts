@@ -8,6 +8,11 @@ export type BackendEnv = {
    * This is useful for interactive terminal runs.
    */
   stream?: boolean;
+  /**
+   * Optional path to write a backend transcript (stdout/stderr + metadata).
+   * Intended for debugging when terminal output is insufficient.
+   */
+  logFile?: string;
 };
 
 export type ImplementInput = {

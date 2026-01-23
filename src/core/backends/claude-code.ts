@@ -1,5 +1,6 @@
 import { execa } from "execa";
 import type { BackendEnv, CodingBackend, ImplementInput, ImplementOutput } from "./types";
+import { writeBackendLog } from "./log-writer";
 
 /**
  * ClaudeCodeBackend shells out to the `claude` CLI for code implementation.
@@ -19,11 +20,21 @@ export class ClaudeCodeBackend implements CodingBackend {
     const prompt = this.buildPrompt(task, iteration, repairNotes);
 
     try {
+      const startedAt = new Date().toISOString();
       // Claude CLI: `claude --print "prompt"` for headless operation
       // The --print flag runs claude non-interactively
-      const subprocess = execa("claude", ["--print", prompt], {
+      const command = "claude";
+      const argv = ["--print", prompt];
+
+      // Use task budget time limit if available, otherwise fall back to default or constructor option
+      const taskTimeoutMs =
+        task.budget?.hard?.timeMinutes !== undefined
+          ? task.budget.hard.timeMinutes * 60_000
+          : this.opts.timeoutMs ?? 600_000; // 10 min default
+
+      const subprocess = execa(command, argv, {
         cwd: env.cwd,
-        timeout: this.opts.timeoutMs ?? 600_000, // 10 min default
+        timeout: taskTimeoutMs,
         reject: false,
         stdio: "pipe",
       });
@@ -33,6 +44,25 @@ export class ClaudeCodeBackend implements CodingBackend {
       }
 
       const result = await subprocess;
+      const finishedAt = new Date().toISOString();
+      const timedOut = (result as any).timedOut === true;
+
+      if (env.logFile) {
+        await writeBackendLog({
+          logFile: env.logFile,
+          backendId: env.backendId,
+          cwd: env.cwd,
+          command,
+          argv: ["--print", "<prompt redacted>"],
+          startedAt,
+          finishedAt,
+          exitCode: result.exitCode ?? null,
+          timedOut,
+          timeoutMs: taskTimeoutMs,
+          stdout: result.stdout,
+          stderr: result.stderr,
+        });
+      }
 
       if (result.exitCode === 0) {
         return {
@@ -41,7 +71,20 @@ export class ClaudeCodeBackend implements CodingBackend {
         };
       }
 
-      // Non-zero exit code
+      // Handle timeout explicitly
+      if (timedOut || (result.exitCode === 143 && !result.stdout && !result.stderr)) {
+        const timeoutMinutes = Math.floor(taskTimeoutMs / 60_000);
+        return {
+          ok: false,
+          message: `Claude Code timed out after ${timeoutMinutes} minute(s). The task budget allows ${task.budget?.hard?.timeMinutes ?? "N/A"} minutes. ${
+            task.budget?.hard?.timeMinutes && taskTimeoutMs >= task.budget.hard.timeMinutes * 60_000
+              ? "Consider breaking the task into smaller subtasks or increasing the task's hard.time_minutes budget."
+              : "The task may be too complex or Claude Code may need more time. Check the backend log for details."
+          }`,
+        };
+      }
+
+      // Non-zero exit code (not a timeout)
       return {
         ok: false,
         message: `Claude Code exited with code ${result.exitCode}: ${result.stderr || result.stdout}`.slice(

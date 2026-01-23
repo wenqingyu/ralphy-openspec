@@ -1,5 +1,6 @@
 import { execa } from "execa";
 import type { BackendEnv, CodingBackend, ImplementInput, ImplementOutput } from "./types";
+import { writeBackendLog } from "./log-writer";
 
 /**
  * CursorBackend shells out to the `cursor` CLI for code implementation.
@@ -19,6 +20,7 @@ export class CursorBackend implements CodingBackend {
     const prompt = this.buildPrompt(task, iteration, repairNotes);
 
     try {
+      const startedAt = new Date().toISOString();
       /**
        * Cursor 2.x CLI provides `cursor agent` (headless) which is suitable for this backend.
        *
@@ -27,12 +29,29 @@ export class CursorBackend implements CodingBackend {
        * - `--print` makes it usable from scripts/non-interactive terminals.
        * - `--workspace` ensures the agent operates on the task working directory.
        */
+      const command = "cursor";
+      const argv = [
+        "agent",
+        "--print",
+        "--output-format",
+        "text",
+        "--workspace",
+        env.cwd,
+        prompt,
+      ];
+
+      // Use task budget time limit if available, otherwise fall back to default or constructor option
+      const taskTimeoutMs =
+        task.budget?.hard?.timeMinutes !== undefined
+          ? task.budget.hard.timeMinutes * 60_000
+          : this.opts.timeoutMs ?? 600_000; // 10 min default
+
       const subprocess = execa(
-        "cursor",
-        ["agent", "--print", "--output-format", "text", "--workspace", env.cwd, prompt],
+        command,
+        argv,
         {
           cwd: env.cwd,
-          timeout: this.opts.timeoutMs ?? 600_000, // 10 min default
+          timeout: taskTimeoutMs,
           reject: false,
           stdio: "pipe",
         }
@@ -44,7 +63,26 @@ export class CursorBackend implements CodingBackend {
       }
 
       const result = await subprocess;
+      const finishedAt = new Date().toISOString();
       const combined = [result.stdout, result.stderr].filter(Boolean).join("\n").trim();
+      const timedOut = (result as any).timedOut === true;
+
+      if (env.logFile) {
+        await writeBackendLog({
+          logFile: env.logFile,
+          backendId: env.backendId,
+          cwd: env.cwd,
+          command,
+          argv: argv.map((a, i) => (i === argv.length - 1 ? "<prompt redacted>" : a)),
+          startedAt,
+          finishedAt,
+          exitCode: result.exitCode ?? null,
+          timedOut,
+          timeoutMs: taskTimeoutMs,
+          stdout: result.stdout,
+          stderr: result.stderr,
+        });
+      }
 
       // Cursor Agent auth failures (common on first run)
       if (result.exitCode !== 0 && /(not logged in|authentication required)/i.test(combined)) {
@@ -62,10 +100,29 @@ export class CursorBackend implements CodingBackend {
         };
       }
 
-      // Non-zero exit code
+      // Handle timeout explicitly
+      if (timedOut || (result.exitCode === 143 && !combined)) {
+        const timeoutMinutes = Math.floor(taskTimeoutMs / 60_000);
+        return {
+          ok: false,
+          message: `Cursor Agent timed out after ${timeoutMinutes} minute(s). The task budget allows ${task.budget?.hard?.timeMinutes ?? "N/A"} minutes. ${
+            task.budget?.hard?.timeMinutes && taskTimeoutMs >= task.budget.hard.timeMinutes * 60_000
+              ? "Consider breaking the task into smaller subtasks or increasing the task's hard.time_minutes budget."
+              : "The task may be too complex or Cursor Agent may need more time. Check the backend log for details."
+          }`,
+        };
+      }
+
+      // Non-zero exit code (not a timeout)
       return {
         ok: false,
-        message: `Cursor Agent exited with code ${result.exitCode}: ${combined || "(no output)"}`.slice(
+        message: `Cursor Agent exited with code ${result.exitCode}: ${
+          combined || "(no output)"
+        }${
+          result.exitCode === 143
+            ? " (process was terminated; may indicate a crash or external kill signal)"
+            : ""
+        }`.slice(
           0,
           2000
         ),

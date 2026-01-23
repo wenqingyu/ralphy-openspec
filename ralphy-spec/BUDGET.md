@@ -1,7 +1,7 @@
 # BUDGET
 
-- **runId**: `run_2026-01-23T10-53-47-544Z_7e12ccca`
-- **updatedAt**: 2026-01-23T10:53:47.552Z
+- **runId**: `run_2026-01-23T11-28-27-673Z_6cbd9720`
+- **updatedAt**: 2026-01-23T11:38:27.716Z
 
 # Spend Breakdown Report
 

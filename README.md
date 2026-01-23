@@ -23,6 +23,11 @@ ralphy-spec status
 ralphy-spec budget --json
 ```
 
+Logs & artifacts (during/after runs):
+- `ralphy-spec/STATUS.md`: live status (primary)
+- `ralphy-spec/runs/<runId>.md`: run log (immutable on completion)
+- `ralphy-spec/logs/<runId>/...`: backend transcripts (stdout/stderr + metadata)
+
 Then use the commands for your AI tool:
 
 ### Cursor

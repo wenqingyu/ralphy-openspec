@@ -1,4 +1,6 @@
 import crypto from "node:crypto";
+import fs from "node:fs/promises";
+import path from "node:path";
 import type { ProjectSpec, TaskSpec } from "../spec/types";
 import { buildTaskDAG } from "../spec/dag";
 import { PersistenceLayer } from "../memory/persistence";
@@ -25,6 +27,7 @@ import { enforceSprintConstraints } from "./constraints";
 import { detectScopeViolations } from "../workspace/scope-detector";
 import { SPRINT_INTENT_CONSTRAINTS } from "../spec/sprint-defaults";
 import type { Issue } from "../validators/types";
+import { FOLDERS, getRalphyRoot } from "../folders";
 
 export type EngineOptions = {
   repoRoot: string;
@@ -50,6 +53,11 @@ function createRunId(): string {
 export class EngineLoop {
   async run(opts: EngineOptions): Promise<RunOutcome> {
     const runId = createRunId();
+    const progress = (line: string) => {
+      if (opts.json) return;
+      // Keep stdout clean for scripts; progress goes to stderr.
+      process.stderr.write(`[ralphy-spec] ${line}\n`);
+    };
     const persistence = await PersistenceLayer.openForRepo(opts.repoRoot);
     const ledger = new LedgerLogger(persistence, runId);
     let artifactsEnabled = Boolean(opts.spec.artifacts?.enabled);
@@ -75,6 +83,9 @@ export class EngineLoop {
       workspaceMode: opts.workspace.mode,
     });
     ledger.event({ kind: "run_started", message: "Run started", data: { runId } });
+    progress(
+      `Run started: ${runId} (backend=${opts.backend.id}, workspace=${opts.workspace.mode})`
+    );
     const safeArtifact = async (fn: () => Promise<void>) => {
       if (!artifactsEnabled) return;
       try {
@@ -145,6 +156,7 @@ export class EngineLoop {
       const dag = buildTaskDAG(tasks);
 
       const planOrder = opts.taskId ? [opts.taskId] : dag.order;
+      progress(`Plan: ${planOrder.length} task(s)`);
 
       if (opts.dryRun) {
         ledger.event({
@@ -152,6 +164,7 @@ export class EngineLoop {
           message: "Dry run plan generated",
           data: { tasks: planOrder },
         });
+        progress("Dry run completed (no backend calls).");
         persistence.finishRun({ runId, status: "success" });
         await finalizeArtifacts({ ok: true, runId });
         return { ok: true, runId };
@@ -183,6 +196,7 @@ export class EngineLoop {
           runBudgetManager,
           artifacts: artifactsEnabled ? { rootDir: artifactsRootDir } : null,
           streamBackend: opts.streamBackend,
+          progress,
         });
 
         if (!outcome.ok) {
@@ -196,6 +210,7 @@ export class EngineLoop {
       }
 
       ledger.event({ kind: "run_done", message: "All tasks done" });
+      progress("All tasks done.");
       persistence.finishRun({ runId, status: "success" });
       const okOutcome: RunOutcome = { ok: true, runId };
       await finalizeArtifacts(okOutcome);
@@ -212,6 +227,7 @@ export class EngineLoop {
         exitCode: 4,
         reason: err?.message ? String(err.message) : String(err),
       };
+      progress(`Run error: ${outcome.reason}`);
       await finalizeArtifacts(outcome);
       return outcome;
     } finally {
@@ -231,6 +247,7 @@ export class EngineLoop {
     runBudgetManager: BudgetManager;
     artifacts: { rootDir?: string } | null;
     streamBackend?: boolean;
+    progress?: (line: string) => void;
   }): Promise<RunOutcome> {
     const { task, runId, persistence, ledger, runBudgetManager } = args;
     let artifacts = args.artifacts;
@@ -238,6 +255,7 @@ export class EngineLoop {
     let phase: Phase = "PLAN";
     persistence.upsertTaskState({ runId, taskId: task.id, status: "running", phase });
     ledger.event({ taskId: task.id, kind: "task_started", message: "Task started" });
+    args.progress?.(`Task started: ${task.id}`);
     const refreshArtifacts = async () => {
       if (!artifacts) return;
       const ledgerEvents = persistence.listLedger({ runId, limit: 5000 });
@@ -480,6 +498,7 @@ export class EngineLoop {
         iteration: iter,
       });
       ledger.event({ taskId: task.id, kind: "exec", message: `EXEC iteration ${iter}` });
+      args.progress?.(`EXEC ${task.id} iteration ${iter} (tier=${tier})`);
       if (artifacts) {
         try {
           await writeStatus({
@@ -534,8 +553,38 @@ export class EngineLoop {
         }
       }
 
+      // Prepare a per-iteration backend log file if artifacts are enabled.
+      const backendLogFile = artifacts
+        ? path.join(
+            getRalphyRoot(args.repoRoot, artifacts.rootDir),
+            FOLDERS.logs,
+            runId,
+            `${task.id}_iter-${iter}_${args.backend.id}.md`
+          )
+        : undefined;
+      if (backendLogFile) {
+        await fs.mkdir(path.dirname(backendLogFile), { recursive: true });
+        args.progress?.(`Backend log: ${path.relative(args.repoRoot, backendLogFile)}`);
+      }
+
+      // Heartbeat while backend is running (prevents "looks hung" cases).
+      const backendStartedAt = Date.now();
+      const heartbeat = args.progress
+        ? setInterval(() => {
+            const elapsedSec = Math.floor((Date.now() - backendStartedAt) / 1000);
+            args.progress?.(
+              `Backend still running: ${task.id} iteration ${iter} (elapsed=${elapsedSec}s)`
+            );
+          }, 30_000)
+        : null;
+
       const backendRes = await args.backend.implement(
-        { cwd, backendId: args.backend.id, stream: args.streamBackend },
+        {
+          cwd,
+          backendId: args.backend.id,
+          stream: args.streamBackend,
+          logFile: backendLogFile,
+        },
         {
           task,
           iteration: iter,
@@ -546,8 +595,10 @@ export class EngineLoop {
               : undefined),
         }
       );
+      if (heartbeat) clearInterval(heartbeat);
 
       if (!backendRes.ok) {
+        args.progress?.(`Backend error for ${task.id}: ${backendRes.message}`);
         persistence.upsertTaskState({
           runId,
           taskId: task.id,
@@ -589,6 +640,7 @@ export class EngineLoop {
       }
 
       phase = "VALIDATE";
+      args.progress?.(`VALIDATE ${task.id} iteration ${iter}`);
       if (artifacts) {
         try {
           await writeStatus({

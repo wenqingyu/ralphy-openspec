@@ -64,6 +64,15 @@ ralphy-spec checkpoint --task &lt;taskId&gt; --message &lt;message&gt;</code></p
       </section>
 
       <section class="docs-section">
+        <h2>Logs & artifacts</h2>
+        <ul>
+          <li><code>ralphy-spec/STATUS.md</code>: live status snapshot (updates during a run)</li>
+          <li><code>ralphy-spec/runs/&lt;runId&gt;.md</code>: immutable run log after completion</li>
+          <li><code>ralphy-spec/logs/&lt;runId&gt;/...</code>: backend transcripts (stdout/stderr + metadata)</li>
+        </ul>
+      </section>
+
+      <section class="docs-section">
         <h2>Useful links</h2>
         <ul>
           <li><a href={`/${lang}/changelog`}>{t('nav.changelog')}</a></li>
