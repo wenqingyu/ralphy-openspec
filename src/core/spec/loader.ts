@@ -4,6 +4,7 @@ import YAML from "yaml";
 import { ZodError } from "zod";
 import { projectSpecSchema } from "./schemas";
 import type { ProjectSpec } from "./types";
+import { mergeBudgetDefaults, SPRINT_SIZE_DEFAULTS } from "./sprint-defaults";
 
 export class SpecLoader {
   constructor(private readonly repoRoot: string) {}
@@ -17,7 +18,15 @@ export class SpecLoader {
       rawText.kind === "yml" ? YAML.parse(rawText.text) : JSON.parse(rawText.text);
 
     try {
-      return projectSpecSchema.parse(raw);
+      const spec = projectSpecSchema.parse(raw);
+      const tasks = (spec.tasks ?? []).map((t) => {
+        const size = t.sprint?.size;
+        if (!size) return t;
+        const defaults = spec.sprintDefaults?.[size] ?? SPRINT_SIZE_DEFAULTS[size];
+        if (!defaults) return t;
+        return { ...t, budget: mergeBudgetDefaults(t.budget, defaults) };
+      });
+      return { ...spec, tasks };
     } catch (err) {
       if (err instanceof ZodError) {
         const pretty = err.issues

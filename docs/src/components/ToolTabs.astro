@@ -73,7 +73,12 @@ const t = useTranslations(lang);
 openspec/
 ├── specs/
 ├── changes/
-└── project.md</code></pre>
+└── project.md
+
+ralphy-spec/
+├── STATUS.md
+├── TASKS.md
+└── BUDGET.md</code></pre>
             </div>
           </div>
           <div class="example-section">
@@ -124,7 +129,12 @@ openspec/
 openspec/
 ├── specs/
 ├── changes/
-└── project.md</code></pre>
+└── project.md
+
+ralphy-spec/
+├── STATUS.md
+├── TASKS.md
+└── BUDGET.md</code></pre>
             </div>
           </div>
           <div class="example-section">
@@ -166,9 +176,12 @@ openspec/
 ├── changes/
 └── project.md
 
-.ralphy/
-├── config.json
-└── ralph-loop.state.json</code></pre>
+ralphy-spec/
+├── state.db
+├── STATUS.md
+├── TASKS.md
+├── BUDGET.md
+└── runs/</code></pre>
             </div>
           </div>
           <div class="example-section">
@@ -181,6 +194,11 @@ ralph "Follow AGENTS.md to implement add-api. \
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="next-links">
+      <a class="mini-link" href={`/${lang}/docs/cli`}>→ {t('nav.cli')}</a>
+      <a class="mini-link" href={`/${lang}/changelog`}>→ {t('nav.changelog')}</a>
     </div>
   </div>
 </section>
@@ -381,6 +399,22 @@ ralph "Follow AGENTS.md to implement add-api. \
   .example-section {
     border-top: 1px solid var(--color-border);
     padding-top: 1rem;
+  }
+
+  .next-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    font-size: 12px;
+  }
+
+  .mini-link {
+    color: var(--color-text-muted);
+  }
+
+  .mini-link:hover {
+    color: var(--color-text-secondary);
   }
 
   .example-section pre {

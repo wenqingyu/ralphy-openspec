@@ -2,23 +2,52 @@ import type { Command } from "commander";
 import path from "node:path";
 import { SpecLoader } from "../core/spec/loader";
 import { buildTaskDAG } from "../core/spec/dag";
+import { ClaudeCodeBackend } from "../core/backends/claude-code";
+import { CursorBackend } from "../core/backends/cursor";
 import { NoopBackend } from "../core/backends/noop";
+import { OpenCodeBackend } from "../core/backends/opencode";
 import { PatchModeWorkspace } from "../core/workspace/patch-mode";
+import { WorktreeModeWorkspace } from "../core/workspace/worktree-mode";
 import { EngineLoop } from "../core/engine/loop";
+
+function createBackend(id: string) {
+  switch (id) {
+    case "cursor":
+      return new CursorBackend();
+    case "opencode":
+      return new OpenCodeBackend();
+    case "claude-code":
+      return new ClaudeCodeBackend();
+    case "noop":
+      return new NoopBackend("noop");
+    default:
+      // Fallback: treat as noop for unknown ids (but retain id for diagnostics).
+      return new NoopBackend(id);
+  }
+}
 
 export function registerRunCommand(program: Command): void {
   program
     .command("run")
     .description("Execute the ralphy-spec engine loop")
-    .option("--backend <id>", "Backend id: cursor|opencode|claude-code", "cursor")
-    .option("--workspace <mode>", "Workspace mode: worktree|patch", "patch")
+    .option("--backend <id>", "Backend id: cursor|opencode|claude-code|noop")
+    .option("--workspace <mode>", "Workspace mode: worktree|patch")
+    .option("--artifact-dir <dir>", "Override artifact root directory (enables artifacts)")
     .option("--task <taskId>", "Run a single task (skips dependency checks)")
     .option("--dry-run", "Validate spec and print plan only", false)
     .option("--json", "Machine-readable output", false)
+    .addHelpText(
+      "after",
+      `\nConcepts:\n` +
+        `- Budget tiers: optimal -> warning -> hard. WARNING enables degrade behaviors; HARD blocks the task.\n` +
+        `- Sprint sizing: XS/S/M/L/XL (optional per task via sprint.size).\n` +
+        `- Sprint intent: fix|feature|refactor|infra (optional per task via sprint.intent).\n`
+    )
     .action(
       async (opts: {
-        backend: string;
-        workspace: "worktree" | "patch";
+        backend?: string;
+        workspace?: "worktree" | "patch";
+        artifactDir?: string;
         task?: string;
         dryRun: boolean;
         json: boolean;
@@ -34,6 +63,17 @@ export function registerRunCommand(program: Command): void {
           process.stderr.write("\n");
           process.exitCode = 4;
           return;
+        }
+
+        if (opts.artifactDir) {
+          spec = {
+            ...spec,
+            artifacts: {
+              ...(spec.artifacts ?? {}),
+              enabled: true,
+              rootDir: opts.artifactDir,
+            },
+          };
         }
 
         // Always build DAG in run/dry-run to validate deps/cycles unless --task is used.
@@ -54,16 +94,14 @@ export function registerRunCommand(program: Command): void {
           return;
         }
 
-        if (opts.workspace === "worktree") {
-          process.stderr.write(
-            `Workspace mode "worktree" is not implemented in this MVP. Use --workspace patch.\n`
-          );
-          process.exitCode = 6;
-          return;
-        }
+        const backendId = opts.backend ?? spec.defaults.backend ?? "cursor";
+        const workspaceMode = opts.workspace ?? spec.defaults.workspaceMode ?? "patch";
 
-        const backend = new NoopBackend(opts.backend);
-        const workspace = new PatchModeWorkspace(path.resolve(repoRoot));
+        const backend = createBackend(backendId);
+        const workspace =
+          workspaceMode === "worktree"
+            ? new WorktreeModeWorkspace(path.resolve(repoRoot))
+            : new PatchModeWorkspace(path.resolve(repoRoot));
 
         const engine = new EngineLoop();
         const outcome = await engine.run({

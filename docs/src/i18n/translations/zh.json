@@ -4,6 +4,7 @@
   
   "nav.home": "首页",
   "nav.docs": "文档",
+  "nav.cli": "命令",
   "nav.changelog": "更新日志",
   "nav.github": "GitHub",
   "nav.getStarted": "快速开始",

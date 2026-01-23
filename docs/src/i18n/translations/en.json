@@ -4,6 +4,7 @@
   
   "nav.home": "Home",
   "nav.docs": "Documentation",
+  "nav.cli": "CLI",
   "nav.changelog": "Changelog",
   "nav.github": "GitHub",
   "nav.getStarted": "Get Started",

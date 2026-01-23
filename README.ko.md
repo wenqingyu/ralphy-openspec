@@ -14,6 +14,15 @@
 npx ralphy-spec init
 ```
 
+CLI 기본 사용:
+
+```bash
+ralphy-spec run --dry-run
+ralphy-spec run
+ralphy-spec status
+ralphy-spec budget --json
+```
+
 그런 다음 AI 도구에 맞는 명령을 사용하세요:
 
 ### Cursor
@@ -81,10 +90,22 @@ openspec/
 ├── archive/              # 완료됨
 └── project.md            # 컨텍스트
 
-.ralphy/
-├── config.json
-└── ralph-loop.state.json
+ralphy-spec/              # 로컬 상태 + 아티팩트(IDE 친화적)
+├── state.db              # SQLite 실행/태스크 로그
+├── STATUS.md             # 라이브 상태(`ralphy-spec status`가 우선 사용)
+├── TASKS.md              # 태스크 보드
+├── BUDGET.md             # 비용/예산
+├── runs/                 # 불변 실행 로그(`runs/<runId>.md`)
+├── logs/                 # 백엔드 원본 출력(가능한 경우)
+├── worktrees/            # Git worktree(worktree 모드 사용 시)
+└── tasks/                # 태스크별 아티팩트(CONTEXT / REPAIR / NOTES)
+    └── <taskId>/
+        ├── CONTEXT.md
+        ├── REPAIR.md
+        └── NOTES.md
 ```
+
+> 참고: 기존 `.ralphy/` 폴더가 있으면 자동으로 `ralphy-spec/`로 마이그레이션됩니다.
 
 ## 작동 방식
 

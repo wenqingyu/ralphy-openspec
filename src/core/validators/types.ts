@@ -1,5 +1,5 @@
 export type Issue = {
-  kind: "tsc" | "eslint" | "jest" | "contract_violation" | "unknown";
+  kind: "tsc" | "eslint" | "jest" | "contract_violation" | "scope_violation" | "unknown";
   level: "error" | "warning";
   message: string;
   file?: string;

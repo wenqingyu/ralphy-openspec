@@ -14,6 +14,15 @@
 npx ralphy-spec init
 ```
 
+CLI basics:
+
+```bash
+ralphy-spec run --dry-run
+ralphy-spec run
+ralphy-spec status
+ralphy-spec budget --json
+```
+
 Then use the commands for your AI tool:
 
 ### Cursor
@@ -81,10 +90,22 @@ openspec/
 ├── archive/              # Completed
 └── project.md            # Context
 
-.ralphy/
-├── config.json
-└── ralph-loop.state.json
+ralphy-spec/              # Local state + artifacts (IDE-friendly)
+├── state.db              # SQLite run/task ledger
+├── STATUS.md             # Live run snapshot (primary for `ralphy-spec status`)
+├── TASKS.md              # Task board view
+├── BUDGET.md             # Spend/budget breakdown
+├── runs/                 # Immutable run logs (`runs/<runId>.md`)
+├── logs/                 # Raw backend outputs (best-effort)
+├── worktrees/            # Git worktrees per task (when enabled)
+└── tasks/                # Per-task artifacts (CONTEXT / REPAIR / NOTES)
+    └── <taskId>/
+        ├── CONTEXT.md
+        ├── REPAIR.md
+        └── NOTES.md
 ```
+
+> Note: Legacy `.ralphy/` folders are migrated to `ralphy-spec/` automatically when found.
 
 ## How It Works
 

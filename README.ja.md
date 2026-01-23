@@ -14,6 +14,15 @@
 npx ralphy-spec init
 ```
 
+CLI 基本:
+
+```bash
+ralphy-spec run --dry-run
+ralphy-spec run
+ralphy-spec status
+ralphy-spec budget --json
+```
+
 次に、AIツールに対応するコマンドを使用します：
 
 ### Cursor
@@ -81,10 +90,22 @@ openspec/
 ├── archive/              # 完了
 └── project.md            # コンテキスト
 
-.ralphy/
-├── config.json
-└── ralph-loop.state.json
+ralphy-spec/              # ローカル状態 + アーティファクト（IDE向け）
+├── state.db              # SQLite 実行/タスクログ
+├── STATUS.md             # ライブ状態（`ralphy-spec status` が優先）
+├── TASKS.md              # タスクボード
+├── BUDGET.md             # コスト/予算
+├── runs/                 # 不変の実行ログ（`runs/<runId>.md`）
+├── logs/                 # バックエンド出力（ベストエフォート）
+├── worktrees/            # Git worktree（worktreeモード時）
+└── tasks/                # タスク別アーティファクト（CONTEXT / REPAIR / NOTES）
+    └── <taskId>/
+        ├── CONTEXT.md
+        ├── REPAIR.md
+        └── NOTES.md
 ```
+
+> 注: 既存の `.ralphy/` フォルダが見つかった場合、`ralphy-spec/` へ自動的に移行します。
 
 ## 仕組み
 

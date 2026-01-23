@@ -19,6 +19,10 @@ defaults:
     - test
     - lint
 
+# Policies (heuristics; configurable)
+policies:
+  scopeGuard: "warn"           # off | warn | block
+
 # Artifacts (IDE-friendly human interface)
 # NOTE: These are defaults; users can override or disable.
 artifacts:

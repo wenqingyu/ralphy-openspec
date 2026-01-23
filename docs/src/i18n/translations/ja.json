@@ -4,6 +4,7 @@
   
   "nav.home": "ホーム",
   "nav.docs": "ドキュメント",
+  "nav.cli": "CLI",
   "nav.changelog": "変更履歴",
   "nav.github": "GitHub",
   "nav.getStarted": "始める",

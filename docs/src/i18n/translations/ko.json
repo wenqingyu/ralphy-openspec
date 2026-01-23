@@ -4,6 +4,7 @@
   
   "nav.home": "홈",
   "nav.docs": "문서",
+  "nav.cli": "CLI",
   "nav.changelog": "변경 로그",
   "nav.github": "GitHub",
   "nav.getStarted": "시작하기",

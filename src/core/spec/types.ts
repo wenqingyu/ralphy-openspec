@@ -12,6 +12,10 @@ export type ProjectSpec = {
     checkpointMode: "commit" | "patch";
     validators: string[];
   };
+  policies?: {
+    scopeGuard?: "off" | "warn" | "block";
+  };
+  sprintDefaults?: Partial<Record<SprintSize, TaskBudget>>;
   budgets?: {
     run?: {
       moneyUsd?: number;
@@ -65,6 +69,14 @@ export type FileContract = {
   allowNewFiles: boolean;
 };
 
+export type SprintSize = "XS" | "S" | "M" | "L" | "XL";
+export type SprintIntent = "fix" | "feature" | "refactor" | "infra";
+
+export type TaskSprint = {
+  size?: SprintSize;
+  intent?: SprintIntent;
+};
+
 export type TaskSpec = {
   id: string;
   title?: string;
@@ -74,5 +86,6 @@ export type TaskSpec = {
   validators?: string[];
   filesContract?: FileContract;
   budget?: TaskBudget;
+  sprint?: TaskSprint;
 };
 

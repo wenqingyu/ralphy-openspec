@@ -44,6 +44,12 @@ const t = useTranslations(lang);
         </svg>
       </a>
     </div>
+
+    <div class="hero-links">
+      <a href={`/${lang}/changelog`}>{t('nav.changelog')}</a>
+      <span class="sep">·</span>
+      <a href={`/${lang}/docs/cli`}>{t('nav.cli')}</a>
+    </div>
   </div>
 </section>
 
@@ -138,6 +144,25 @@ const t = useTranslations(lang);
     display: flex;
     gap: 0.75rem;
     justify-content: center;
+  }
+
+  .hero-links {
+    margin-top: 1rem;
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  .hero-links a {
+    color: var(--color-text-muted);
+  }
+
+  .hero-links a:hover {
+    color: var(--color-text-secondary);
+  }
+
+  .sep {
+    margin: 0 0.5rem;
+    opacity: 0.5;
   }
 
   @media (max-width: 768px) {

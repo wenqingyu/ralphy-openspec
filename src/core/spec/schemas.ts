@@ -78,6 +78,12 @@ const taskSchema = z
     files_contract: fileContractSchema.optional(),
     filesContract: fileContractSchema.optional(),
     budget: taskBudgetSchema.optional(),
+    sprint: z
+      .object({
+        size: z.enum(["XS", "S", "M", "L", "XL"]).optional(),
+        intent: z.enum(["fix", "feature", "refactor", "infra"]).optional(),
+      })
+      .optional(),
   })
   .transform((v): TaskSpec => ({
     id: v.id,
@@ -88,6 +94,7 @@ const taskSchema = z
     validators: v.validators,
     filesContract: (v.filesContract ?? v.files_contract) as FileContract | undefined,
     budget: v.budget,
+    sprint: v.sprint,
   }));
 
 const validatorSchema = z
@@ -126,6 +133,13 @@ const defaultsSchema = z
     checkpointMode: v.checkpointMode ?? "commit",
     validators: v.validators ?? [],
   }));
+
+const policiesSchema = z
+  .object({
+    scopeGuard: z.enum(["off", "warn", "block"]).optional(),
+  })
+  .partial()
+  .optional();
 
 const budgetsSchema = z
   .object({
@@ -189,6 +203,17 @@ const artifactsSchema = z
   })
   .optional();
 
+const sprintDefaultsSchema = z
+  .object({
+    XS: taskBudgetSchema.optional(),
+    S: taskBudgetSchema.optional(),
+    M: taskBudgetSchema.optional(),
+    L: taskBudgetSchema.optional(),
+    XL: taskBudgetSchema.optional(),
+  })
+  .partial()
+  .optional();
+
 const backendsSchema = z.record(
   z.string(),
   z.object({
@@ -207,6 +232,9 @@ export const projectSpecSchema = z
       checkpointMode: "commit",
       validators: [],
     }),
+    policies: policiesSchema,
+    sprint_defaults: sprintDefaultsSchema,
+    sprintDefaults: sprintDefaultsSchema,
     budgets: budgetsSchema,
     backends: backendsSchema.optional(),
     validators: z.array(validatorSchema).optional(),
@@ -217,6 +245,8 @@ export const projectSpecSchema = z
     version: v.version,
     project: v.project,
     defaults: v.defaults,
+    policies: v.policies,
+    sprintDefaults: v.sprintDefaults ?? v.sprint_defaults,
     budgets: v.budgets,
     backends: v.backends,
     validators: v.validators,

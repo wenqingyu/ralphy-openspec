@@ -14,6 +14,15 @@
 npx ralphy-spec init
 ```
 
+CLI 基础用法：
+
+```bash
+ralphy-spec run --dry-run
+ralphy-spec run
+ralphy-spec status
+ralphy-spec budget --json
+```
+
 然后使用你的 AI 工具对应的命令：
 
 ### Cursor
@@ -81,10 +90,22 @@ openspec/
 ├── archive/              # 已完成
 └── project.md            # 上下文
 
-.ralphy/
-├── config.json
-└── ralph-loop.state.json
+ralphy-spec/              # 本地状态 + 可读产物（IDE 友好）
+├── state.db              # SQLite 运行/任务日志
+├── STATUS.md             # 实时状态（`ralphy-spec status` 优先读取）
+├── TASKS.md              # 任务看板
+├── BUDGET.md             # 花费/预算
+├── runs/                 # 不可变运行日志（`runs/<runId>.md`）
+├── logs/                 # 后端原始输出（尽力写入）
+├── worktrees/            # Git worktree（启用 worktree 模式时）
+└── tasks/                # 单任务产物（CONTEXT / REPAIR / NOTES）
+    └── <taskId>/
+        ├── CONTEXT.md
+        ├── REPAIR.md
+        └── NOTES.md
 ```
+
+> 注意：如果检测到旧的 `.ralphy/`，会自动迁移到 `ralphy-spec/` 并提示。
 
 ## 工作原理
 

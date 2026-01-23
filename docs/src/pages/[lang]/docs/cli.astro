@@ -1,0 +1,87 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+import { ui } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+  return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<Layout title={`CLI`}>
+  <div class="docs-page">
+    <div class="container">
+      <h1>CLI</h1>
+      <p class="muted">Full command reference for <code>ralphy-spec</code>.</p>
+
+      <section class="docs-section">
+        <h2>Quick start</h2>
+        <pre><code>npx ralphy-spec init
+ralphy-spec run --dry-run
+ralphy-spec run
+ralphy-spec status
+ralphy-spec budget --json</code></pre>
+      </section>
+
+      <section class="docs-section">
+        <h2>Commands</h2>
+        <pre><code>ralphy-spec init [--dir &lt;path&gt;] [--tools &lt;cursor,claude-code,opencode&gt;] [--force]
+ralphy-spec update [--dir &lt;path&gt;] [--tools &lt;cursor,claude-code,opencode&gt;] [--force]
+
+ralphy-spec validate [--dir &lt;path&gt;] [--tools &lt;cursor,claude-code,opencode&gt;]
+ralphy-spec validate --task &lt;taskId&gt; [--dir &lt;path&gt;]
+
+ralphy-spec run [--backend &lt;cursor|opencode|claude-code|noop&gt;] [--workspace &lt;worktree|patch&gt;]
+              [--artifact-dir &lt;dir&gt;] [--task &lt;taskId&gt;] [--dry-run] [--json]
+
+ralphy-spec status [--json]
+ralphy-spec budget [--json]
+ralphy-spec report [--out &lt;filepath&gt;] [--json]
+ralphy-spec tail [--interval-ms &lt;n&gt;]
+
+ralphy-spec checkpoint --task &lt;taskId&gt; --message &lt;message&gt;</code></pre>
+      </section>
+
+      <section class="docs-section">
+        <h2>Essential user journey</h2>
+        <ol>
+          <li><strong>Initialize</strong>: <code>ralphy-spec init</code></li>
+          <li><strong>Describe work</strong> in <code>openspec/project.yml</code> (tasks, validators, budgets, sprint)</li>
+          <li><strong>Dry-run</strong>: <code>ralphy-spec run --dry-run</code> (safe)</li>
+          <li><strong>Run</strong>: <code>ralphy-spec run</code></li>
+          <li><strong>Observe</strong>: <code>status</code>/<code>tail</code>/<code>budget</code>/<code>report</code></li>
+        </ol>
+      </section>
+
+      <section class="docs-section">
+        <h2>Useful links</h2>
+        <ul>
+          <li><a href={`/${lang}/changelog`}>{t('nav.changelog')}</a></li>
+          <li><a href={`/${lang}/docs/`}>{t('nav.docs')}</a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .docs-page {
+    padding: 4rem 0;
+  }
+  .docs-section {
+    margin-bottom: 2.5rem;
+  }
+  .muted {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    margin-top: -0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  ol {
+    margin-left: 1.25rem;
+  }
+</style>
+

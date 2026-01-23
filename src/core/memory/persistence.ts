@@ -81,7 +81,12 @@ export class PersistenceLayer {
   }
 
   static async openForRepo(repoRoot: string): Promise<PersistenceLayer> {
-    await migrateLegacyIfNeeded(repoRoot);
+    const migrated = await migrateLegacyIfNeeded(repoRoot);
+    if (migrated.migrated) {
+      process.stderr.write(
+        `Warning: migrated legacy state folder "${migrated.from}" to "${migrated.to}".\n`
+      );
+    }
     const ralphyDir = await ensureRalphyFolders(repoRoot);
     const dbPath = path.join(ralphyDir, FILES.db);
     return new PersistenceLayer(dbPath);
@@ -187,6 +192,30 @@ export class PersistenceLayer {
         message: r.message,
         data: r.dataJson ? JSON.parse(r.dataJson) : undefined,
       }));
+  }
+
+  listTasksForRun(args: { runId: string }): Array<{
+    taskId: string;
+    status: TaskStatus;
+    phase?: string;
+    iteration: number;
+    lastError?: string;
+  }> {
+    const rows = this.db
+      .prepare(
+        `SELECT task_id as taskId, status, phase, iteration, last_error as lastError
+         FROM tasks
+         WHERE run_id=@runId
+         ORDER BY task_id ASC`
+      )
+      .all({ runId: args.runId });
+    return rows.map((r: any) => ({
+      taskId: r.taskId,
+      status: r.status,
+      phase: r.phase ?? undefined,
+      iteration: r.iteration ?? 0,
+      lastError: r.lastError ?? undefined,
+    }));
   }
 
   getLatestRun(): { runId: string; status: RunStatus; startedAt: string } | null {

@@ -2,6 +2,7 @@ import { execa } from "execa";
 import path from "node:path";
 import fs from "node:fs/promises";
 import type { FileContract } from "../spec/types";
+import { FOLDERS, getRalphyRoot } from "../folders";
 import { evaluateFileContract } from "../spec/file-contract";
 import type {
   CheckpointRef,
@@ -28,7 +29,7 @@ export class WorktreeModeWorkspace implements WorkspaceManager {
   private readonly worktreeBase: string;
 
   constructor(private readonly repoRoot: string) {
-    this.worktreeBase = path.join(repoRoot, ".ralphy", "worktrees");
+    this.worktreeBase = path.join(getRalphyRoot(repoRoot), FOLDERS.worktrees);
   }
 
   async prepare(taskId: string): Promise<WorkspaceContext> {
