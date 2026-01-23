@@ -64,5 +64,8 @@
 
   "changelog.title": "변경 로그",
   
+  "changelog.title": "변경 로그",
+  "changelog.description": "버전 기록 및 릴리스 노트",
+  
   "footer.license": "BSD-3-Clause"
 }

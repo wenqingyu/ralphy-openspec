@@ -64,5 +64,8 @@
 
   "changelog.title": "変更履歴",
   
+  "changelog.title": "変更履歴",
+  "changelog.description": "バージョン履歴とリリースノート",
+  
   "footer.license": "BSD-3-Clause"
 }

@@ -64,5 +64,8 @@
 
   "changelog.title": "更新日志",
   
+  "changelog.title": "更新日志",
+  "changelog.description": "版本历史与发布说明",
+  
   "footer.license": "BSD-3-Clause"
 }

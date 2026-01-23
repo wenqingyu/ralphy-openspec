@@ -64,5 +64,8 @@
 
   "changelog.title": "Changelog",
   
+  "changelog.title": "Changelog",
+  "changelog.description": "Version history and release notes",
+  
   "footer.license": "BSD-3-Clause"
 }

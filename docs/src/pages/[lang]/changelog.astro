@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 import { ui } from '../../i18n/ui';
-import fs from 'node:fs';
+import * as fs from 'fs';
 
 export function getStaticPaths() {
   return Object.keys(ui).map((lang) => ({ params: { lang } }));
