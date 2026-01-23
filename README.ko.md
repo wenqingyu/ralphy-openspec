@@ -5,6 +5,8 @@
 **스펙 기반 AI 개발 + 반복 실행.** OpenSpec과 Ralph Loop를 결합하여 예측 가능한 AI 지원 코딩을 실현합니다.
 
 **웹사이트:** [https://ralphy-spec.org](https://ralphy-spec.org)
+**문서:** [https://ralphy-spec.org/ko/docs/](https://ralphy-spec.org/ko/docs/)
+**변경 로그:** [https://ralphy-spec.org/ko/changelog/](https://ralphy-spec.org/ko/changelog/) · [GitHub](https://github.com/wenqingyu/ralphy-openspec/blob/main/CHANGELOG.md)
 
 ## 빠른 시작
 
@@ -18,19 +20,19 @@ npx ralphy-spec init
 
 | 명령 | 기능 |
 |------|------|
-| `/ralphy:plan` | 요구사항에서 스펙 생성 |
-| `/ralphy:implement` | 반복 루프로 빌드 |
-| `/ralphy:validate` | 인수 기준 검증 |
-| `/ralphy:archive` | 완료 및 아카이브 |
+| `/ralphy-plan` | 요구사항에서 스펙 생성 |
+| `/ralphy-implement` | 반복 루프로 빌드 |
+| `/ralphy-validate` | 인수 기준 검증 |
+| `/ralphy-archive` | 완료 및 아카이브 |
 
 ### Claude Code
 
 | 명령 | 기능 |
 |------|------|
-| `/ralphy:plan` | 요구사항에서 스펙 생성 |
-| `/ralphy:implement` | 반복 루프로 빌드 |
-| `/ralphy:validate` | 인수 기준 검증 |
-| `/ralphy:archive` | 완료 및 아카이브 |
+| `/ralphy-plan` | 요구사항에서 스펙 생성 |
+| `/ralphy-implement` | 반복 루프로 빌드 |
+| `/ralphy-validate` | 인수 기준 검증 |
+| `/ralphy-archive` | 완료 및 아카이브 |
 
 ### OpenCode
 
@@ -50,16 +52,16 @@ ralph "Follow AGENTS.md to implement add-api. Output <promise>TASK_COMPLETE</pro
 
 ```bash
 # 1. 계획: 아이디어에서 스펙 생성
-You: /ralphy:plan JWT 사용자 인증 추가
+You: /ralphy-plan JWT 사용자 인증 추가
 
 # 2. 구현: AI가 반복적으로 빌드
-You: /ralphy:implement add-user-auth
+You: /ralphy-implement add-user-auth
 
 # 3. 검증: 테스트 통과 확인
-You: /ralphy:validate
+You: /ralphy-validate
 
 # 4. 아카이브: 변경 완료
-You: /ralphy:archive add-user-auth
+You: /ralphy-archive add-user-auth
 ```
 
 ## 생성되는 파일

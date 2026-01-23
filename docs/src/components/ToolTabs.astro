@@ -46,19 +46,19 @@ const t = useTranslations(lang);
           <div class="tab-inner">
             <div class="commands-section">
               <div class="command-row">
-                <code>/ralphy:plan</code>
+                <code>/ralphy-plan</code>
                 <span>→ {t('setup.cmd.plan')}</span>
               </div>
               <div class="command-row">
-                <code>/ralphy:implement</code>
+                <code>/ralphy-implement</code>
                 <span>→ {t('setup.cmd.implement')}</span>
               </div>
               <div class="command-row">
-                <code>/ralphy:validate</code>
+                <code>/ralphy-validate</code>
                 <span>→ {t('setup.cmd.validate')}</span>
               </div>
               <div class="command-row">
-                <code>/ralphy:archive</code>
+                <code>/ralphy-archive</code>
                 <span>→ {t('setup.cmd.archive')}</span>
               </div>
             </div>
@@ -79,16 +79,16 @@ openspec/
           <div class="example-section">
             <div class="example-label">{t('setup.example')}</div>
             <pre><code><span class="comment"># Plan</span>
-/ralphy:plan Add user authentication with JWT
+/ralphy-plan Add user authentication with JWT
 
 <span class="comment"># Implement</span>
-/ralphy:implement add-user-auth
+/ralphy-implement add-user-auth
 
 <span class="comment"># Validate</span>
-/ralphy:validate
+/ralphy-validate
 
 <span class="comment"># Archive</span>
-/ralphy:archive add-user-auth</code></pre>
+/ralphy-archive add-user-auth</code></pre>
           </div>
         </div>
 
@@ -97,19 +97,19 @@ openspec/
           <div class="tab-inner">
             <div class="commands-section">
               <div class="command-row">
-                <code>/ralphy:plan</code>
+                <code>/ralphy-plan</code>
                 <span>→ {t('setup.cmd.plan')}</span>
               </div>
               <div class="command-row">
-                <code>/ralphy:implement</code>
+                <code>/ralphy-implement</code>
                 <span>→ {t('setup.cmd.implement')}</span>
               </div>
               <div class="command-row">
-                <code>/ralphy:validate</code>
+                <code>/ralphy-validate</code>
                 <span>→ {t('setup.cmd.validate')}</span>
               </div>
               <div class="command-row">
-                <code>/ralphy:archive</code>
+                <code>/ralphy-archive</code>
                 <span>→ {t('setup.cmd.archive')}</span>
               </div>
             </div>
@@ -130,13 +130,13 @@ openspec/
           <div class="example-section">
             <div class="example-label">{t('setup.example')}</div>
             <pre><code><span class="comment"># Plan</span>
-/ralphy:plan Add payment processing with Stripe
+/ralphy-plan Add payment processing with Stripe
 
 <span class="comment"># Implement</span>
-/ralphy:implement add-payments
+/ralphy-implement add-payments
 
 <span class="comment"># Validate & Archive</span>
-/ralphy:validate && /ralphy:archive add-payments</code></pre>
+/ralphy-validate && /ralphy-archive add-payments</code></pre>
           </div>
         </div>
 
@@ -176,7 +176,7 @@ openspec/
             <pre><code>npm install -g @th0rgal/ralph-wiggum
 
 ralph "Follow AGENTS.md to implement add-api. \
-  Output &lt;promise&gt;DONE&lt;/promise&gt; when complete." \
+  Output &lt;promise&gt;TASK_COMPLETE&lt;/promise&gt; when done." \
   --max-iterations 20</code></pre>
           </div>
         </div>

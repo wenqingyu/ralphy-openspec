@@ -1,8 +1,9 @@
 ---
-import { getLangFromUrl } from '../i18n/utils';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import LanguagePicker from './LanguagePicker.astro';
 
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <nav class="nav">
@@ -10,6 +11,8 @@ const lang = getLangFromUrl(Astro.url);
     <a href={`/${lang}/`} class="nav-logo">ralphy-spec</a>
     
     <div class="nav-links">
+      <a href={`/${lang}/docs/`}>{t('nav.docs')}</a>
+      <a href={`/${lang}/changelog`}>{t('nav.changelog')}</a>
       <a href="https://github.com/wenqingyu/ralphy-openspec" target="_blank" rel="noopener">GitHub</a>
       <a href="https://www.npmjs.com/package/ralphy-spec" target="_blank" rel="noopener">npm</a>
       <LanguagePicker />

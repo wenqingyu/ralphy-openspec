@@ -1,6 +1,6 @@
 {
   "name": "ralphy-spec",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "One-command setup for Ralph loop + OpenSpec workflows across Cursor, OpenCode, and Claude Code.",
   "license": "BSD-3-Clause",
   "author": "Wenqing Yu",
@@ -36,6 +36,7 @@
     "README.zh.md",
     "README.ko.md",
     "README.ja.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "engines": {

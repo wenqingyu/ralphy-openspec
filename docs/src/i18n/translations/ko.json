@@ -4,6 +4,7 @@
   
   "nav.home": "홈",
   "nav.docs": "문서",
+  "nav.changelog": "변경 로그",
   "nav.github": "GitHub",
   "nav.getStarted": "시작하기",
   
@@ -60,6 +61,8 @@
   "docs.installation": "설치",
   "docs.workflow": "워크플로우",
   "docs.platformGuides": "플랫폼 가이드",
+
+  "changelog.title": "변경 로그",
   
   "footer.license": "BSD-3-Clause"
 }

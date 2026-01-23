@@ -4,6 +4,7 @@
   
   "nav.home": "ホーム",
   "nav.docs": "ドキュメント",
+  "nav.changelog": "変更履歴",
   "nav.github": "GitHub",
   "nav.getStarted": "始める",
   
@@ -60,6 +61,8 @@
   "docs.installation": "インストール",
   "docs.workflow": "ワークフロー",
   "docs.platformGuides": "プラットフォームガイド",
+
+  "changelog.title": "変更履歴",
   
   "footer.license": "BSD-3-Clause"
 }

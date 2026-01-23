@@ -1,0 +1,49 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { ui } from '../../i18n/ui';
+import fs from 'node:fs';
+
+export function getStaticPaths() {
+  return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const changelogFile = new URL('../../../../CHANGELOG.md', import.meta.url);
+const changelog = fs.readFileSync(changelogFile, 'utf8');
+---
+
+<Layout title={t('changelog.title')}>
+  <div class="docs-page">
+    <div class="container">
+      <h1>{t('changelog.title')}</h1>
+      <pre class="changelog"><code>{changelog}</code></pre>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .docs-page {
+    padding: 4rem 0;
+  }
+
+  .changelog {
+    margin-top: 1.5rem;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow: auto;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .changelog code {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+</style>
+

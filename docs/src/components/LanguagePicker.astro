@@ -24,6 +24,7 @@ const langLabels: Record<string, string> = {
     {Object.entries(languages).map(([code, name]) => (
       <a 
         href={`/${code}${pathWithoutLang}`} 
+        data-lang={code}
         class:list={['language-option', { active: code === lang }]}
       >
         {name}
@@ -31,6 +32,24 @@ const langLabels: Record<string, string> = {
     ))}
   </div>
 </div>
+
+<script is:inline define:vars={{ lang }}>
+  const STORAGE_KEY = 'ralphy_lang';
+
+  try {
+    localStorage.setItem(STORAGE_KEY, lang);
+  } catch {}
+
+  document.querySelectorAll('.language-option').forEach((el) => {
+    el.addEventListener('click', () => {
+      const next = el.getAttribute('data-lang');
+      if (!next) return;
+      try {
+        localStorage.setItem(STORAGE_KEY, next);
+      } catch {}
+    });
+  });
+</script>
 
 <style>
   .language-picker {

@@ -1,18 +1,34 @@
 ---
-// Redirect root to default locale (English)
+// Root landing: default to English, remember last selected language.
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=/en/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="canonical" href="/en/">
-  <title>Redirecting...</title>
+  <title>ralphy-spec</title>
 </head>
 <body>
-  <script>window.location.href = '/en/';</script>
+  <script>
+    (function () {
+      var SUPPORTED = ['en', 'zh', 'ko', 'ja'];
+      var STORAGE_KEY = 'ralphy_lang';
+      var target = 'en';
+
+      try {
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (saved && SUPPORTED.indexOf(saved) !== -1) target = saved;
+      } catch (e) {}
+
+      window.location.replace('/' + target + '/');
+    })();
+  </script>
   <noscript>
-    <meta http-equiv="refresh" content="0;url=/en/">
+    <p>
+      JavaScript is required to select your preferred language. Continue to
+      <a href="/en/">English</a>.
+    </p>
   </noscript>
 </body>
 </html>

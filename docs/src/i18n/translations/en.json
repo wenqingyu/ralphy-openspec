@@ -4,6 +4,7 @@
   
   "nav.home": "Home",
   "nav.docs": "Documentation",
+  "nav.changelog": "Changelog",
   "nav.github": "GitHub",
   "nav.getStarted": "Get Started",
   
@@ -60,6 +61,8 @@
   "docs.installation": "Installation",
   "docs.workflow": "Workflow",
   "docs.platformGuides": "Platform Guides",
+
+  "changelog.title": "Changelog",
   
   "footer.license": "BSD-3-Clause"
 }

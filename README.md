@@ -5,6 +5,8 @@
 **Spec-driven AI development with iterative execution.** Combines OpenSpec + Ralph Loop for predictable AI-assisted coding.
 
 **Website:** [https://ralphy-spec.org](https://ralphy-spec.org)
+**Docs:** [https://ralphy-spec.org/en/docs/](https://ralphy-spec.org/en/docs/)
+**Changelog:** [https://ralphy-spec.org/en/changelog/](https://ralphy-spec.org/en/changelog/) · [GitHub](https://github.com/wenqingyu/ralphy-openspec/blob/main/CHANGELOG.md)
 
 ## Quick Start
 
@@ -18,19 +20,19 @@ Then use the commands for your AI tool:
 
 | Command | What it does |
 |---------|--------------|
-| `/ralphy:plan` | Create specs from requirements |
-| `/ralphy:implement` | Build with iterative loop |
-| `/ralphy:validate` | Verify acceptance criteria |
-| `/ralphy:archive` | Complete and archive |
+| `/ralphy-plan` | Create specs from requirements |
+| `/ralphy-implement` | Build with iterative loop |
+| `/ralphy-validate` | Verify acceptance criteria |
+| `/ralphy-archive` | Complete and archive |
 
 ### Claude Code
 
 | Command | What it does |
 |---------|--------------|
-| `/ralphy:plan` | Create specs from requirements |
-| `/ralphy:implement` | Build with iterative loop |
-| `/ralphy:validate` | Verify acceptance criteria |
-| `/ralphy:archive` | Complete and archive |
+| `/ralphy-plan` | Create specs from requirements |
+| `/ralphy-implement` | Build with iterative loop |
+| `/ralphy-validate` | Verify acceptance criteria |
+| `/ralphy-archive` | Complete and archive |
 
 ### OpenCode
 
@@ -50,16 +52,16 @@ ralph "Follow AGENTS.md to implement add-api. Output <promise>TASK_COMPLETE</pro
 
 ```bash
 # 1. Plan: Create spec from your idea
-You: /ralphy:plan Add user authentication with JWT
+You: /ralphy-plan Add user authentication with JWT
 
 # 2. Implement: AI builds it iteratively  
-You: /ralphy:implement add-user-auth
+You: /ralphy-implement add-user-auth
 
 # 3. Validate: Verify tests pass
-You: /ralphy:validate
+You: /ralphy-validate
 
 # 4. Archive: Complete the change
-You: /ralphy:archive add-user-auth
+You: /ralphy-archive add-user-auth
 ```
 
 ## What Gets Created

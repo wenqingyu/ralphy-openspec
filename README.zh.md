@@ -5,6 +5,8 @@
 **规范驱动的 AI 开发 + 迭代执行。** 结合 OpenSpec 和 Ralph 循环，实现可预测的 AI 辅助编码。
 
 **官网：** [https://ralphy-spec.org](https://ralphy-spec.org)
+**文档：** [https://ralphy-spec.org/zh/docs/](https://ralphy-spec.org/zh/docs/)
+**更新日志：** [https://ralphy-spec.org/zh/changelog/](https://ralphy-spec.org/zh/changelog/) · [GitHub](https://github.com/wenqingyu/ralphy-openspec/blob/main/CHANGELOG.md)
 
 ## 快速开始
 
@@ -18,19 +20,19 @@ npx ralphy-spec init
 
 | 命令 | 功能 |
 |------|------|
-| `/ralphy:plan` | 从需求创建规范 |
-| `/ralphy:implement` | 迭代循环构建 |
-| `/ralphy:validate` | 验证验收标准 |
-| `/ralphy:archive` | 完成并归档 |
+| `/ralphy-plan` | 从需求创建规范 |
+| `/ralphy-implement` | 迭代循环构建 |
+| `/ralphy-validate` | 验证验收标准 |
+| `/ralphy-archive` | 完成并归档 |
 
 ### Claude Code
 
 | 命令 | 功能 |
 |------|------|
-| `/ralphy:plan` | 从需求创建规范 |
-| `/ralphy:implement` | 迭代循环构建 |
-| `/ralphy:validate` | 验证验收标准 |
-| `/ralphy:archive` | 完成并归档 |
+| `/ralphy-plan` | 从需求创建规范 |
+| `/ralphy-implement` | 迭代循环构建 |
+| `/ralphy-validate` | 验证验收标准 |
+| `/ralphy-archive` | 完成并归档 |
 
 ### OpenCode
 
@@ -50,16 +52,16 @@ ralph "Follow AGENTS.md to implement add-api. Output <promise>TASK_COMPLETE</pro
 
 ```bash
 # 1. 规划：从你的想法创建规范
-You: /ralphy:plan 添加 JWT 用户认证
+You: /ralphy-plan 添加 JWT 用户认证
 
 # 2. 实现：AI 迭代构建
-You: /ralphy:implement add-user-auth
+You: /ralphy-implement add-user-auth
 
 # 3. 验证：确保测试通过
-You: /ralphy:validate
+You: /ralphy-validate
 
 # 4. 归档：完成变更
-You: /ralphy:archive add-user-auth
+You: /ralphy-archive add-user-auth
 ```
 
 ## 创建的文件

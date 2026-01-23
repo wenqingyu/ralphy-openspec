@@ -46,25 +46,25 @@ ralphy-spec init --tools claude-code</code></pre>
         <p>In Claude Code, use the slash commands to trigger each workflow phase:</p>
         
         <div class="command-card">
-          <h3><code>/ralphy:plan</code></h3>
+          <h3><code>/ralphy-plan</code></h3>
           <p>Create an OpenSpec change proposal from your requirements or PRD.</p>
           <p class="example">Example: "Create an OpenSpec proposal for adding a payment system"</p>
         </div>
 
         <div class="command-card">
-          <h3><code>/ralphy:implement</code></h3>
+          <h3><code>/ralphy-implement</code></h3>
           <p>Implement tasks from the current OpenSpec change. Compatible with Ralph loop methodology.</p>
           <p class="example">Example: "Implement the add-payments change"</p>
         </div>
 
         <div class="command-card">
-          <h3><code>/ralphy:validate</code></h3>
+          <h3><code>/ralphy-validate</code></h3>
           <p>Run tests and validate that all acceptance criteria from the spec are met.</p>
           <p class="example">Example: "Validate that the payment integration works correctly"</p>
         </div>
 
         <div class="command-card">
-          <h3><code>/ralphy:archive</code></h3>
+          <h3><code>/ralphy-archive</code></h3>
           <p>Archive the completed change and merge spec deltas back to source of truth.</p>
           <p class="example">Example: "Archive the add-payments change"</p>
         </div>
@@ -83,16 +83,16 @@ ralphy-spec init --tools claude-code</code></pre>
       <section class="docs-section">
         <h2>Full Workflow Example</h2>
         <pre><code># 1. Plan - Create OpenSpec from requirements
-/ralphy:plan Add user profile settings page with avatar upload
+/ralphy-plan Add user profile settings page with avatar upload
 
 # 2. Implement - Build the feature
-/ralphy:implement add-profile-settings
+/ralphy-implement add-profile-settings
 
 # 3. Validate - Ensure tests pass
-/ralphy:validate
+/ralphy-validate
 
 # 4. Archive - Complete the change
-/ralphy:archive add-profile-settings</code></pre>
+/ralphy-archive add-profile-settings</code></pre>
       </section>
 
       <div class="nav-links">

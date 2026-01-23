@@ -5,6 +5,8 @@
 **スペック駆動AI開発 + 反復実行。** OpenSpecとRalph Loopを組み合わせて、予測可能なAI支援コーディングを実現します。
 
 **ウェブサイト:** [https://ralphy-spec.org](https://ralphy-spec.org)
+**ドキュメント:** [https://ralphy-spec.org/ja/docs/](https://ralphy-spec.org/ja/docs/)
+**変更履歴:** [https://ralphy-spec.org/ja/changelog/](https://ralphy-spec.org/ja/changelog/) · [GitHub](https://github.com/wenqingyu/ralphy-openspec/blob/main/CHANGELOG.md)
 
 ## クイックスタート
 
@@ -18,19 +20,19 @@ npx ralphy-spec init
 
 | コマンド | 機能 |
 |----------|------|
-| `/ralphy:plan` | 要件からスペック作成 |
-| `/ralphy:implement` | 反復ループでビルド |
-| `/ralphy:validate` | 受け入れ基準を検証 |
-| `/ralphy:archive` | 完了してアーカイブ |
+| `/ralphy-plan` | 要件からスペック作成 |
+| `/ralphy-implement` | 反復ループでビルド |
+| `/ralphy-validate` | 受け入れ基準を検証 |
+| `/ralphy-archive` | 完了してアーカイブ |
 
 ### Claude Code
 
 | コマンド | 機能 |
 |----------|------|
-| `/ralphy:plan` | 要件からスペック作成 |
-| `/ralphy:implement` | 反復ループでビルド |
-| `/ralphy:validate` | 受け入れ基準を検証 |
-| `/ralphy:archive` | 完了してアーカイブ |
+| `/ralphy-plan` | 要件からスペック作成 |
+| `/ralphy-implement` | 反復ループでビルド |
+| `/ralphy-validate` | 受け入れ基準を検証 |
+| `/ralphy-archive` | 完了してアーカイブ |
 
 ### OpenCode
 
@@ -50,16 +52,16 @@ ralph "Follow AGENTS.md to implement add-api. Output <promise>TASK_COMPLETE</pro
 
 ```bash
 # 1. 計画: アイデアからスペック作成
-You: /ralphy:plan JWT ユーザー認証を追加
+You: /ralphy-plan JWT ユーザー認証を追加
 
 # 2. 実装: AIが反復的にビルド
-You: /ralphy:implement add-user-auth
+You: /ralphy-implement add-user-auth
 
 # 3. 検証: テストパスを確認
-You: /ralphy:validate
+You: /ralphy-validate
 
 # 4. アーカイブ: 変更を完了
-You: /ralphy:archive add-user-auth
+You: /ralphy-archive add-user-auth
 ```
 
 ## 作成されるファイル
