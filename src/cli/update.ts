@@ -49,7 +49,10 @@ export function registerUpdateCommand(program: Command): void {
       const parsed = parseToolsArg(opts.tools);
       const detected = await detectExistingTools(dir);
       const defaultTools =
-        parsed ?? (detected.length ? detected : (["cursor", "claude-code", "opencode"] as ToolId[]));
+        parsed ??
+        (detected.length
+          ? detected
+          : (["cursor", "claude-code", "opencode"] as ToolId[]));
 
       const tools = parsed ?? (await promptForTools(defaultTools));
       await installToolTemplates(dir, tools, { force: opts.force });

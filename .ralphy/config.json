@@ -1,0 +1,4 @@
+{
+  "testCommand": "npm test",
+  "completionPromise": "TASK_COMPLETE"
+}

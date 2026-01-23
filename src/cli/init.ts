@@ -56,7 +56,10 @@ export function registerInitCommand(program: Command): void {
 
       const detected = await detectExistingTools(options.dir);
       const defaultTools =
-        options.tools ?? (detected.length ? detected : (["cursor", "claude-code", "opencode"] as ToolId[]));
+        options.tools ??
+        (detected.length
+          ? detected
+          : (["cursor", "claude-code", "opencode"] as ToolId[]));
       const tools = options.tools ?? (await promptForTools(defaultTools));
 
       await ensureOpenSpecScaffold(options.dir);

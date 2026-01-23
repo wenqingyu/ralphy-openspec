@@ -1,7 +1,12 @@
 import { Command } from "commander";
-import { registerInitCommand } from "./commands/init";
-import { registerValidateCommand } from "./commands/validate";
-import { registerUpdateCommand } from "./commands/update";
+import { registerInitCommand } from "./cli/init";
+import { registerValidateCommand } from "./cli/validate";
+import { registerUpdateCommand } from "./cli/update";
+import { registerRunCommand } from "./cli/run";
+import { registerStatusCommand } from "./cli/status";
+import { registerReportCommand } from "./cli/report";
+import { registerTailCommand } from "./cli/tail";
+import { registerCheckpointCommand } from "./cli/checkpoint";
 
 function buildProgram(): Command {
   const program = new Command();
@@ -16,6 +21,11 @@ function buildProgram(): Command {
   registerInitCommand(program);
   registerValidateCommand(program);
   registerUpdateCommand(program);
+  registerRunCommand(program);
+  registerStatusCommand(program);
+  registerReportCommand(program);
+  registerTailCommand(program);
+  registerCheckpointCommand(program);
 
   return program;
 }
