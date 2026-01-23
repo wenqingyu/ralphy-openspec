@@ -3,6 +3,7 @@ import path from "node:path";
 import fse from "fs-extra";
 import type { ToolId } from "../types";
 import { getDistTemplatesDir } from "./paths";
+import { DEFAULT_ROOT_DIR } from "../core/folders";
 
 async function ensureDir(p: string) {
   await fs.mkdir(p, { recursive: true });
@@ -114,7 +115,7 @@ export async function installToolTemplates(
   }
 
   // Ralphy config/state
-  const ralphyDir = path.join(projectDir, ".ralphy");
+  const ralphyDir = path.join(projectDir, DEFAULT_ROOT_DIR);
   await ensureDir(ralphyDir);
   await writeFileIfMissing(
     path.join(ralphyDir, "config.json"),

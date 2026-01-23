@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { ToolId, ValidationIssue } from "../types";
+import { DEFAULT_ROOT_DIR, LEGACY_ROOT_DIR } from "../core/folders";
 
 async function exists(p: string): Promise<boolean> {
   try {
@@ -52,6 +53,16 @@ export async function validateProject(
     if (!(await exists(path.join(projectDir, p)))) {
       issues.push({ level: "warning", message: `Missing ${p}`, path: p });
     }
+  }
+
+  const newRoot = path.join(projectDir, DEFAULT_ROOT_DIR);
+  const legacyRoot = path.join(projectDir, LEGACY_ROOT_DIR);
+  if (!(await exists(newRoot)) && (await exists(legacyRoot))) {
+    issues.push({
+      level: "warning",
+      message: `Legacy folder detected. Consider migrating ${LEGACY_ROOT_DIR}/ to ${DEFAULT_ROOT_DIR}/`,
+      path: LEGACY_ROOT_DIR,
+    });
   }
 
   return issues;

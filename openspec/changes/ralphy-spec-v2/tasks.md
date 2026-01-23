@@ -8,7 +8,7 @@ Target: Self-correcting, self-governed execution engine
 ## Phase 1: Foundation (MVP, Usable)
 
 ### 1.1 Project Structure Refactoring
-- [ ] **1.1.1** Reorganize `src/` into new structure
+- [x] **1.1.1** Reorganize `src/` into new structure
   ```
   src/
     cli/           # CLI commands
@@ -25,7 +25,7 @@ Target: Self-correcting, self-governed execution engine
   ```
   - Test plan: `npm run typecheck` passes
 
-- [ ] **1.1.2** Add new dependencies to package.json
+- [x] **1.1.2** Add new dependencies to package.json
   - `zod` for schema validation
   - `better-sqlite3` for persistence
   - `execa` for process execution
@@ -161,22 +161,22 @@ Target: Self-correcting, self-governed execution engine
   - Test plan: Manual test with claude CLI
 
 ### 1.9 CLI Commands (MVP)
-- [ ] **1.9.1** Extend `init` command for v2
+- [x] **1.9.1** Extend `init` command for v2
   - File: `src/cli/init.ts`
   - Create template `openspec/project.yml`
   - Test plan: `ralphy-spec init` creates project.yml
 
-- [ ] **1.9.2** Implement `run` command
+- [x] **1.9.2** Implement `run` command
   - File: `src/cli/run.ts`
   - Flags: --backend, --workspace, --task, --dry-run, --json
   - Test plan: `ralphy-spec run --dry-run` shows plan
 
-- [ ] **1.9.3** Implement `status` command
+- [x] **1.9.3** Implement `status` command
   - File: `src/cli/status.ts`
   - Show current run state, budgets, recent events
   - Test plan: `ralphy-spec status` displays info
 
-- [ ] **1.9.4** Implement `report` command
+- [x] **1.9.4** Implement `report` command
   - File: `src/cli/report.ts`
   - Generate markdown report
   - Test plan: `ralphy-spec report --out r.md` creates file
@@ -267,13 +267,13 @@ Target: Self-correcting, self-governed execution engine
 ## Validation Checklist
 
 Before marking Phase 1 complete:
-- [ ] `npm run build` succeeds
-- [ ] `npm run typecheck` passes
-- [ ] `ralphy-spec init` creates all v2 files
-- [ ] `ralphy-spec run --dry-run` validates spec
-- [ ] `ralphy-spec run --task <id>` executes single task
-- [ ] `ralphy-spec status` shows run state
-- [ ] `ralphy-spec report` generates markdown
+- [x] `npm run build` succeeds
+- [x] `npm run typecheck` passes
+- [x] `ralphy-spec init` creates all v2 files
+- [x] `ralphy-spec run --dry-run` validates spec
+- [x] `ralphy-spec run --task <id>` executes single task
+- [x] `ralphy-spec status` shows run state
+- [x] `ralphy-spec report` generates markdown
 
 ---
 

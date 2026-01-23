@@ -11,6 +11,9 @@ import { issueSignature } from "../validators/signatures";
 import type { Phase } from "./phases";
 import { BudgetManager } from "../budgets/manager";
 import { BudgetState } from "../budgets/state";
+import { buildContextPack } from "./context-pack";
+import { buildRepairNotes } from "./repair";
+import type { TaskBudgetConfig } from "../budgets/tiers";
 
 export type EngineOptions = {
   repoRoot: string;
@@ -154,6 +157,8 @@ export class EngineLoop {
     await args.workspace.prepare(task.id);
     const cwd = args.workspace.getWorkingDir(task.id);
 
+    const taskBudgetConfig = this.toTaskBudgetConfig(task) ?? null;
+
     for (let iter = 1; iter <= maxIter; iter++) {
       const iterStarted = Date.now();
 
@@ -176,6 +181,16 @@ export class EngineLoop {
         return { ok: false, runId, exitCode: 2, reason: "Budget limit" };
       }
 
+      const tier = taskBudgetConfig ? budgetManager.getTier(taskBudgetConfig) : "optimal";
+      const shouldDegrade = taskBudgetConfig ? budgetManager.shouldApplyDegrade(taskBudgetConfig) : false;
+      if (shouldDegrade) {
+        ledger.event({
+          taskId: task.id,
+          kind: "degrade",
+          message: "WARNING tier: degrade behaviors enabled",
+        });
+      }
+
       phase = "EXEC";
       persistence.upsertTaskState({
         runId,
@@ -188,7 +203,13 @@ export class EngineLoop {
 
       const backendRes = await args.backend.implement(
         { cwd, backendId: args.backend.id },
-        { task, iteration: iter }
+        {
+          task,
+          iteration: iter,
+          repairNotes: shouldDegrade
+            ? "WARNING tier active (repair-only mode will be enforced on failures)."
+            : undefined,
+        }
       );
 
       if (!backendRes.ok) {
@@ -276,6 +297,29 @@ export class EngineLoop {
         return { ok: true, runId };
       }
 
+      // WARNING tier: shrink context + repair-only text on next iteration.
+      const tierAfter = taskBudgetConfig ? budgetManager.getTier(taskBudgetConfig) : "optimal";
+      if (tierAfter === "warning") {
+        const ctx = buildContextPack({
+          tier: "warning",
+          taskId: task.id,
+          validatorResults: results,
+          issues: allIssues,
+        });
+        ledger.event({
+          taskId: task.id,
+          kind: "context_pack",
+          message: `Context pack built (${ctx.size})`,
+        });
+
+        // Optional calls disabling (MVP: only logs, as we don't have optional calls yet).
+        ledger.event({
+          taskId: task.id,
+          kind: "optional_calls_skipped",
+          message: "WARNING tier: skipping optional calls (self-review / plan regen)",
+        });
+      }
+
       phase = "DIAGNOSE";
       persistence.upsertTaskState({
         runId,
@@ -296,7 +340,17 @@ export class EngineLoop {
       }
 
       phase = "REPAIR";
+      const repairNotes = buildRepairNotes({
+        tier: tierAfter === "warning" ? "warning" : "optimal",
+        issues: allIssues,
+      });
       ledger.event({ taskId: task.id, kind: "repair", message: "Retrying (repair loop)" });
+
+      // Feed repair notes into next iteration via backend input (best effort).
+      await args.backend.implement(
+        { cwd, backendId: args.backend.id },
+        { task, iteration: iter + 1, repairNotes }
+      );
       budgetManager.recordIteration(Date.now() - iterStarted);
     }
 
@@ -314,6 +368,30 @@ export class EngineLoop {
       lastError: "Max iterations reached",
     });
     return { ok: false, runId, exitCode: 3, reason: "Max iterations reached" };
+  }
+
+  private toTaskBudgetConfig(task: TaskSpec): TaskBudgetConfig | null {
+    const b = task.budget;
+    const hardIter = b?.hard?.maxIterations;
+    if (!b || hardIter === undefined) return null;
+    return {
+      optimal: {
+        usd: b.optimal?.usd,
+        tokens: b.optimal?.tokens,
+        timeMinutes: b.optimal?.timeMinutes,
+      },
+      warning: {
+        usd: b.warning?.usd,
+        tokens: b.warning?.tokens,
+        timeMinutes: b.warning?.timeMinutes,
+      },
+      hard: {
+        usd: b.hard?.usd,
+        tokens: b.hard?.tokens,
+        timeMinutes: b.hard?.timeMinutes,
+        maxIterations: hardIter,
+      },
+    };
   }
 
   private resolveValidators(spec: ProjectSpec, task: TaskSpec): Validator[] {

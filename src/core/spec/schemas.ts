@@ -40,11 +40,30 @@ const budgetTierSchema = z
     maxIterations: toNumber(v.maxIterations ?? v.max_iterations),
   }));
 
+const hardBudgetTierSchema = z
+  .object({
+    usd: z.any().optional(),
+    tokens: z.any().optional(),
+    time_minutes: z.any().optional(),
+    timeMinutes: z.any().optional(),
+    max_iterations: z.any(),
+    maxIterations: z.any().optional(),
+  })
+  .transform((v) => ({
+    usd: toNumber(v.usd),
+    tokens: toNumber(v.tokens),
+    timeMinutes: toNumber(v.timeMinutes ?? v.time_minutes),
+    maxIterations: toNumber(v.maxIterations ?? v.max_iterations),
+  }))
+  .refine((v) => typeof v.maxIterations === "number" && Number.isFinite(v.maxIterations), {
+    message: "hard.max_iterations is required",
+  });
+
 const taskBudgetSchema = z
   .object({
     optimal: budgetTierSchema.optional(),
     warning: budgetTierSchema.optional(),
-    hard: budgetTierSchema.optional(),
+    hard: hardBudgetTierSchema.optional(),
   })
   .partial();
 

@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import Database from "better-sqlite3";
+import { ensureRalphyFolders, FILES, migrateLegacyIfNeeded } from "../folders";
 
 export type RunStatus = "active" | "success" | "stopped" | "error";
 export type TaskStatus = "pending" | "running" | "done" | "blocked" | "error";
@@ -80,9 +81,9 @@ export class PersistenceLayer {
   }
 
   static async openForRepo(repoRoot: string): Promise<PersistenceLayer> {
-    const ralphyDir = path.join(repoRoot, ".ralphy");
-    await fs.mkdir(ralphyDir, { recursive: true });
-    const dbPath = path.join(ralphyDir, "ralphy.db");
+    await migrateLegacyIfNeeded(repoRoot);
+    const ralphyDir = await ensureRalphyFolders(repoRoot);
+    const dbPath = path.join(ralphyDir, FILES.db);
     return new PersistenceLayer(dbPath);
   }
 

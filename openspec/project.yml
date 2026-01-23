@@ -94,6 +94,10 @@ validators:
     run: "npm run lint"
     timeout_seconds: 600
     parser: "eslint"
+  - id: "failfast"
+    run: "node -e \"process.exit(1)\""
+    timeout_seconds: 5
+    parser: "jest"
 
 # Tasks - define your implementation tasks here
 tasks:
@@ -101,6 +105,14 @@ tasks:
     title: "Demo task (no validators)"
     goal: "Verify engine can run a single task end-to-end."
     validators: []
+  - id: "demo-002-warning"
+    title: "Demo warning-tier degrade behavior"
+    goal: "Force a failing validator so the loop enters REPAIR; warn-tier should shrink context and add repair-only constraints."
+    validators: ["failfast"]
+    budget:
+      optimal: { time_minutes: 0 }
+      warning: { time_minutes: 0 }
+      hard: { time_minutes: 1, max_iterations: 3 }
 
 # ============================================================
 # TASK EXAMPLES (uncomment and modify as needed)
