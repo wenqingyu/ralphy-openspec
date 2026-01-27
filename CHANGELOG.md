@@ -60,3 +60,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Timeout error messages now clearly distinguish between timeouts (with budget context) and other termination causes (crashes, external kills).
 
+## [0.3.6] - 2026-01-23
+
+### Added
+- **Real-time backend logging**: Backend logs are now written in real-time as output is received, with `[OUT]`/`[ERR]` prefixes for easier debugging.
+- **Agent activity reporting**: Cursor backend now detects and reports agent activities (thinking, executing commands, reading files, etc.) in progress messages when output is available.
+
+### Fixed
+- Improved error handling in Cursor backend: now properly captures and logs errors even when the process is interrupted externally (SIGTERM, SIGKILL, etc.).
+- Backend logs are now always written (best-effort) even if the subprocess throws an exception or is killed, ensuring diagnostic information is preserved.
+- Better error messages for process interruptions, distinguishing between timeouts, crashes, and external kills.
+- Real-time stdout/stderr capture: output is now captured via event listeners before piping to terminal, ensuring all output is logged even when streaming is enabled.
+

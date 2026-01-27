@@ -1,7 +1,7 @@
 # TASKS
 
-- **runId**: `run_2026-01-23T11-28-27-673Z_6cbd9720`
-- **updatedAt**: 2026-01-23T11:38:27.715Z
+- **runId**: `run_2026-01-23T12-17-43-066Z_87dbe997`
+- **updatedAt**: 2026-01-23T12:45:09.423Z
 
 | Task | Status | Phase | Iter | Title |
 |------|--------|-------|------|-------|
@@ -12,4 +12,4 @@
 ### v2.1-1.3.1
 On hard cap: preserve workspace, write summary, mark BLOCKED
 
-Last error: Cursor Agent exited with code 143: (no output) (terminated; this often indicates the process was killed or timed out)
+Last error: Cursor Agent timed out after 20 minute(s). The task budget allows 20 minutes. Consider breaking the task into smaller subtasks or increasing the task's hard.time_minutes budget.
